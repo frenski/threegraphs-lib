@@ -15,4 +15,12 @@ describe("Utils", function() {
     expect( utils.colorLuminance('d17100',0.5) ).toEqual('ffaa00');
   });
   
+  it("should get the maximal value in a 2-dimensional array", function( ) {
+    expect( utils.getMaxArr([[5,3,1,12],[7,2,4]]) ).toEqual(12);
+  });
+  
+  it("should get the minumal value in a 2-dimensional array", function( ) {
+    expect( utils.getMinArr([[5,3,1,12],[7,2,4]]) ).toEqual(1);
+  });
+  
 });
