@@ -37,3 +37,25 @@ THREEGRAPHS.Utils.prototype.colorLuminance = function ( hex, lum ) {
   }
   return rgb;
 };
+
+// Function to get the max value in a 2-dimensional array
+THREEGRAPHS.Utils.prototype.getMaxArr = function ( arr ){
+  var maxVal = arr[0][0];
+  for( var i=0; i<arr.length; i++ ){
+    for ( var j=0; j<arr[i].length; j++ ){
+      if( arr[i][j] > maxVal) maxVal = arr[i][j];
+    }
+  }
+  return maxVal;
+}
+
+// Function to get the max value in a 2-dimensional array
+THREEGRAPHS.Utils.prototype.getMinArr = function ( arr ){
+  var minVal = arr[0][0];
+  for( var i=0; i<arr.length; i++ ){
+    for ( var j=0; j<arr[i].length; j++ ){
+      if( arr[i][j] < minVal) minVal = arr[i][j];
+    }
+  }
+  return minVal;
+}
