@@ -4,6 +4,10 @@
 
 var THREEGRAPHS = { };
 
+/**
+ * THE UTILITY FUNCTIONS CLASS
+ */
+
 THREEGRAPHS.Utils = function () {
   
 };
