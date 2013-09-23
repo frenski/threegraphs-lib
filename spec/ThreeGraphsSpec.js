@@ -31,4 +31,15 @@ describe("Utils", function() {
     expect( utils.getTotalArr([[5,3,1,12],[7,2,4]]) ).toEqual(34);
   });
   
+  it("should initiate the legend div", function( ) {
+    var data = {  cols: [ { name:"2010", color:"d17100" }, 
+                          { name:"2011", color:"d9bd00" } ],
+                  rows: [ { name: "Product 1" } ]
+                };
+    var el = document.createElement('div');
+    utils.initLegend(el, data);
+    var col1 = el.getElementsByTagName("div")[0];
+    expect( col1.style.backgroundColor ).toEqual('d17100');
+  });
+  
 });

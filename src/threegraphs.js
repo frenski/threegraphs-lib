@@ -113,3 +113,4 @@ THREEGRAPHS.Utils.prototype.getTotalArr = function ( arr ){
   }
   return total;
 };
+
