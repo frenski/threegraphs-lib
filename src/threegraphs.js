@@ -4,6 +4,9 @@
 
 var THREEGRAPHS = { };
 
+// MAIN settings 
+THREEGRAPHS.mouse = { x: -3000, y: -3000 };
+
 /**
  * THE UTILITY FUNCTIONS CLASS
  */
@@ -128,4 +131,42 @@ THREEGRAPHS.Utils.prototype.initLegend = function ( el, schema ){
                 schema.cols[i].name+'</div>';
   }
   el.innerHTML += '<div class="clear"></div>';
+};
+
+/**
+ * A function to set the three.js camera mouse/touch controls
+ */
+
+THREEGRAPHS.Utils.prototype.mouseControls  = function ( renderer, camera, minDist, maxDist ){
+  
+  if ( this.isTouchDevice () ){
+    controls = new THREE.TrackballControlsTouch( camera, renderer.domElement );
+  }else{
+    controls = new THREE.TrackballControls( camera, renderer.domElement );
+  }
+  controls.zoomSpeed = 0.3;
+  controls.rotateSpeed = 0.1;
+  controls.minDistance = minDist;
+  controls.maxDistance = maxDist;
+  
+  // funciton to get the mouse position for the hover efect onthe pies
+  
+
+  document.addEventListener( 'mousemove', function ( event ){
+    event.preventDefault();
+    THREEGRAPHS.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    THREEGRAPHS.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  }, false );
+
+  // function to adjust the size of the canvas when resizing the window
+  window.addEventListener( 'resize', function(){
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+  }
+  , false );
+  
+  return controls;
+  
 };
