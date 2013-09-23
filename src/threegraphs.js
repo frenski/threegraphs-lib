@@ -114,3 +114,18 @@ THREEGRAPHS.Utils.prototype.getTotalArr = function ( arr ){
   return total;
 };
 
+
+/**
+ * A funciton to update the legend div
+ */
+
+THREEGRAPHS.Utils.prototype.initLegend = function ( el, schema ){
+  el.innerHTML = "";
+  for ( var i=0; i<schema.cols.length; i++ ){
+    el.innerHTML += '<div style="margin-right:5px; background-color:#'+
+                schema.cols[i].color+'" class="div-legend-color left"></div>'+
+               '<div class="left" style="margin-right:10px;">'+
+                schema.cols[i].name+'</div>';
+  }
+  el.innerHTML += '<div class="clear"></div>';
+};

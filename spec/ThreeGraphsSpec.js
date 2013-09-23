@@ -38,8 +38,8 @@ describe("Utils", function() {
                 };
     var el = document.createElement('div');
     utils.initLegend(el, data);
-    var col1 = el.getElementsByTagName("div")[0];
-    expect( col1.style.backgroundColor ).toEqual('d17100');
+    var col1 = el.getElementsByTagName("div");
+    expect( col1[0].style.backgroundColor ).toEqual('rgb(209, 113, 0)');
   });
   
 });
