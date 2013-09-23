@@ -23,4 +23,12 @@ describe("Utils", function() {
     expect( utils.getMinArr([[5,3,1,12],[7,2,4]]) ).toEqual(1);
   });
   
+  it("should calculate the round of a max number", function( ) {
+    expect( utils.getRoundMax(3.892) ).toEqual(3);
+  });
+  
+  it("should count the total number of elements in a two dimentional array", function( ) {
+    expect( utils.getTotalArr([[5,3,1,12],[7,2,4]]) ).toEqual(7);
+  });
+  
 });
