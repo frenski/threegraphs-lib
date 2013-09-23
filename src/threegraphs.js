@@ -1,11 +1,16 @@
+/**
+ * @author Yane Frenski / http://yane.fr/
+ */
+
 var THREEGRAPHS = { };
 
 THREEGRAPHS.Utils = function () {
   
 };
 
-// A function to Detect touch devices - solution by Gregers Rygg
-// maybe look for better one
+/**
+ * A function to Detect touch devices - solution by Gregers Rygg
+ */
 
 THREEGRAPHS.Utils.prototype.isTouchDevice = function () {
   var el = document.createElement ( 'div' );
@@ -17,9 +22,11 @@ THREEGRAPHS.Utils.prototype.isTouchDevice = function () {
   }
 };
 
-// A function to calcuate lighter hex colour for the wireframe 
-// courtesy of Craig Buckler:
-// http://www.sitepoint.com/javascript-generate-lighter-darker-color/
+/**
+ * A function to calcuate lighter hex colour for the wireframe 
+ * @author Craig Buckler:
+ * http://www.sitepoint.com/javascript-generate-lighter-darker-color/
+ */
 
 THREEGRAPHS.Utils.prototype.colorLuminance = function ( hex, lum ) {
   // validate hex string  
@@ -38,7 +45,10 @@ THREEGRAPHS.Utils.prototype.colorLuminance = function ( hex, lum ) {
   return rgb;
 };
 
-// Function to get the max value in a 2-dimensional array
+/**
+ * A function to get the max value in a 2-dimensional array
+ */
+
 THREEGRAPHS.Utils.prototype.getMaxArr = function ( arr ){
   var maxVal = arr[0][0];
   for( var i=0; i<arr.length; i++ ){
@@ -49,7 +59,10 @@ THREEGRAPHS.Utils.prototype.getMaxArr = function ( arr ){
   return maxVal;
 }
 
-// Function to get the max value in a 2-dimensional array
+/**
+ * Function to get the max value in a 2-dimensional array
+ */
+  
 THREEGRAPHS.Utils.prototype.getMinArr = function ( arr ){
   var minVal = arr[0][0];
   for( var i=0; i<arr.length; i++ ){
