@@ -99,7 +99,10 @@ THREEGRAPHS.Utils.prototype.getRoundMax = function ( val ){
   }
 };
 
-// function to get total count in two dimentional array
+/**
+ * A function to get total count in two dimentional array
+ */
+
 THREEGRAPHS.Utils.prototype.getTotalArr = function ( arr ){
   var total = 0;
   for (var i = 0; i < arr.length; i++) {
