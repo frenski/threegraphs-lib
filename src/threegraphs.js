@@ -150,8 +150,6 @@ THREEGRAPHS.Utils.prototype.mouseControls  = function ( renderer, camera, minDis
   controls.maxDistance = maxDist;
   
   // funciton to get the mouse position for the hover efect onthe pies
-  
-
   document.addEventListener( 'mousemove', function ( event ){
     event.preventDefault();
     THREEGRAPHS.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
@@ -164,8 +162,7 @@ THREEGRAPHS.Utils.prototype.mouseControls  = function ( renderer, camera, minDis
     camera.updateProjectionMatrix();
 
     renderer.setSize( window.innerWidth, window.innerHeight );
-  }
-  , false );
+  }, false );
   
   return controls;
   
