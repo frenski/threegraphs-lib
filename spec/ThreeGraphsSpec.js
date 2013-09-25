@@ -101,21 +101,13 @@ describe("Utils", function() {
 
 describe("Bar Cube", function() {
   
-  beforeEach(function() {
-    var zeroVec = new THREE.Vector3();
-    var scene = new THREE.Scene();
-  });
-  
-  afterEach(function() {
-    delete zeroVec;
-    delete scene;
-  });
+  var scene = new THREE.Scene();
   
   it ( 'should create a new bar object and has a standart size on the x axes', function () {
     var label = document.createElement('div');
-    var nCube = new THREEGRAPHS.BarCube( "d9bd00", 0, 0, 7, "ffffff", 'full', { "row", "col" }, 0, 1, 10 );
-    nCube.add ( scene );
-    expect ( nCube.barobj.scale.x ).toEqual ( THREEGRAPHS.squareSize );
+    var nCube = new THREEGRAPHS.BarCube( "d9bd00", 0, 0, 7, "ffffff", 'full', false, { row:"row", col:"col" }, 0, 10, 10 );
+    nCube.addBar ( scene );
+    expect ( nCube.barobj.geometry.width ).toEqual ( THREEGRAPHS.Settings.squareSize );
   });
   
 });

@@ -11,7 +11,14 @@ THREEGRAPHS.mouse = { x: -3000, y: -3000 };
 THREEGRAPHS.Settings = 
   {
     labelId : "threegraphs-valuelable",
-    squareSize: 100
+    squareSize : 100,
+    squareStep : 200,
+    valHeight : 1000,
+    backColor : "000000",
+    yDeviation : 0,
+    zDeviation : 0,
+    xDeviation : 0,
+    // To be recalculated in the init function
   };
 
 /**
@@ -192,4 +199,151 @@ THREEGRAPHS.Utils.prototype.detectRenderer = function ( ){
   else {
     return 'none';
   }
-}
+};
+
+/**
+ * BAR CUBE CLASS
+ */
+ 
+THREEGRAPHS.BarCube = function( color, x, z, val, valcolor, render, html_label, titles, minScaleVal, scaleDif, valHeight ) {
+
+   // The render type - can be light and full
+   this.renderType = render;
+
+   //the 3D cube object
+   this.barobj = null;
+
+   //the 3D stroke (wireframe object) object
+   this.wfobj = null;
+
+   // should we set the wireframe
+   this.hasWireframe = true;
+
+   // should it have a label. The HTML one should point to a dom element
+   this.hasHTMLLabel = html_label;
+
+   // should it cast/receive shadows
+   this.hasShadows = true;
+
+   // position in the quadrant
+   this.posx = x;
+   this.posz = z;
+
+   // value & height
+   this.val = val;
+   this.h = ((val - minScaleVal)/scaleDif)*THREEGRAPHS.Settings.valHeight;
+   if ( this.h==0 ) this.h = 0.5;
+
+   // rows and column titles
+   this.titles = titles;
+
+   // main cube colour
+   this.color = parseInt(color,16);
+   this.htmlcolor = "#"+color;
+   var utils = new THREEGRAPHS.Utils ();
+   this.lumcolor = utils.colorLuminance( color, 0.5 );
+   this.darklumcolor = utils.colorLuminance( color, -0.3 );
+   this.valcolor = parseInt(valcolor,16);
+
+   // function to add the bar to the scene and position it
+   this.addBar = function( target ){
+
+     // Simple cube geometry for the bar
+     var geometry = new THREE.CubeGeometry( THREEGRAPHS.Settings.squareSize, 
+                                            this.h, 
+                                            THREEGRAPHS.Settings.squareSize );
+
+     // Material for the bars with transparency
+     var material = new THREE.MeshPhongMaterial( {ambient: 0x000000,
+                                                  color: this.color,
+                                                  specular: 0x999999,
+                                                  shininess: 100,
+                                                  shading : THREE.SmoothShading,
+                                                  opacity:0.8,
+                                                  transparent: true
+                                                 } );
+     
+     //  if we want a lower quality renderer - mainly with canvas renderer
+     if( this.renderType == 'light' ){
+       var material = new THREE.MeshLambertMaterial( { color: this.color, 
+                                           shading: THREE.FlatShading, 
+                                           overdraw: true } );
+       this.hasWireframe = false;
+       this.hasShadows = false;
+     }
+     
+     // Creating the 3D object, positioning it and adding it to the scene
+     this.barobj = new THREE.Mesh( geometry, material );
+     
+     // Adds shadows if selected as an option
+     if( this.hasShadows ){
+       this.barobj.castShadow = true;
+       this.barobj.receiveShadow = true;
+     }
+     this.barobj.position.x = THREEGRAPHS.Settings.xDeviation + 
+                              this.posx*THREEGRAPHS.Settings.squareStep + 
+                              THREEGRAPHS.Settings.squareStep/2;
+     this.barobj.position.y = THREEGRAPHS.Settings.yDeviation + this.h/2;
+     this.barobj.position.z = THREEGRAPHS.Settings.zDeviation + 
+                              this.posz*THREEGRAPHS.Settings.squareStep + 
+                              THREEGRAPHS.Settings.squareStep/2;
+     target.add( this.barobj );
+     
+     // If we want to have wireframe (with a lighter colour) we attach 2nd obj
+     if(this.hasWireframe){
+
+       // Creates cube with the same size
+       var geometry = new THREE.CubeGeometry( THREEGRAPHS.Settings.squareSize, 
+                                              this.h, 
+                                              THREEGRAPHS.Settings.squareSize );
+
+       // Generates a wireframe material
+       var material = new THREE.MeshBasicMaterial( { 
+                          color: parseInt( this.lumcolor, 16 ),
+                          wireframe:true} );
+       this.wfobj = new THREE.Mesh( geometry, material );
+       this.wfobj.receiveShadow = true;
+
+       // Adds the wireframe object to the main one
+       this.barobj.add( this.wfobj );
+     }
+     
+     
+   };
+
+   // function to show the label
+   this.showLabel = function( posx, posy){
+
+     if ( this.hasHTMLLabel ) {
+       this.hasHTMLLabel.innerHTML = this.titles.row + 
+                               '<p>' + this.titles.col + ': '+val+'</p>';
+       this.hasHTMLLabel.style.display = 'block';
+       // Back transformation of the coordinates
+       posx = ( ( posx + 1 ) * window.innerWidth / 2 );
+       posy = - ( ( posy - 1 ) * window.innerHeight / 2 );
+       this.hasHTMLLabel.style.left = posx;
+       this.hasHTMLLabel.style.top = posy;
+     }
+
+   };
+
+   // function to hide the label
+   this.hideLabel = function(){
+
+     // Hides HTML Label if set - uses jquery for DOM manipulation
+     if ( this.hasHTMLLabel ) {
+       this.hasHTMLLabel.style.display = 'none';
+     }
+
+   };
+
+   this.reposition = function ( x, y, z ){
+     this.barobj.position.set ( x, y, z );
+   }
+
+   this.reorientation = function ( x, y, z ){
+     this.barobj.rotation.set ( x, y, z );
+   }
+
+
+ };
