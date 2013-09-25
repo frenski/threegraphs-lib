@@ -165,5 +165,24 @@ THREEGRAPHS.Utils.prototype.mouseControls  = function ( renderer, camera, minDis
   }, false );
   
   return controls;
-  
 };
+
+/**
+ * A function to detect the renderer based on the browser
+ */
+
+THREEGRAPHS.Utils.prototype.detectRenderer = function ( ){
+  var ifcanvas = !! window.CanvasRenderingContext2D;
+  var ifwebgl = ( function () { try { return !! window.WebGLRenderingContext && !! document.createElement( 'canvas' ).getContext( 'experimental-webgl' ); } catch( e ) { return false; } } )();
+  
+  // Init vars and scene depending on the renderer
+  if ( ifwebgl ) {
+    return 'webgl';
+  }
+  else if ( ifcanvas ) {
+    return 'canvas';
+  }
+  else {
+    return 'none';
+  }
+}

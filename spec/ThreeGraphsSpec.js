@@ -52,4 +52,40 @@ describe("Utils", function() {
     expect( controls.minDistance ).toEqual( 100 );
   });
   
+  it("should detect the browser", function( ){
+    var agent = navigator.userAgent;
+    var canSupport = 0;
+    if ( agent.indexOf('Firefox') != -1 ){
+      canSupport = 1;
+      if ( parseFloat(navigator.userAgent.substring(navigator.userAgent.indexOf('Firefox') + 8)) >= 4 ){
+        canSupport = 2;
+      }
+    }
+    if ( agent.indexOf('Chrome') != -1 ){
+      canSupport = 1;
+      if ( parseFloat(navigator.userAgent.substring(navigator.userAgent.indexOf('Chrome') + 7).split(' ')[0]) >= 7 ){
+        canSupport = 2;
+      }
+    }
+    if ( agent.indexOf('Safari') != -1 ){
+      canSupport = 1;
+      if ( parseFloat(navigator.userAgent.substring(navigator.userAgent.indexOf('Version') + 8).split(' ')[0]) >= 5.1 ){
+        canSupport = 2;
+      }
+    }
+    if ( navigator.appName.indexOf("Internet Explorer")!=-1 ){
+      if ( navigator.appVersion.indexOf("MSIE 9") == -1 && navigator.appVersion.indexOf("MSIE 10") == -1 ) canSupport = 1;
+      if ( navigator.appVersion.indexOf("MSIE 11") == -1 ) canSupport = 2;
+    }
+    
+    if ( canSupport == 0 ){
+      expect( utils.detectRenderer() ).toEqual( 'none' );
+    } else if ( canSupport == 1 ){
+      expect( utils.detectRenderer() ).toEqual( 'canvas' );
+    } else if ( canSupport == 2 ){
+      expect( utils.detectRenderer() ).toEqual( 'webgl' );
+    }
+    
+  });
+  
 });
