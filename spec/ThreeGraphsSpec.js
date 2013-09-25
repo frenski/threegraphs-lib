@@ -1,3 +1,7 @@
+ /* 
+  * Specs for the Utils class
+  */
+
 describe("Utils", function() {
   
   var utils = new THREEGRAPHS.Utils( );
@@ -86,6 +90,32 @@ describe("Utils", function() {
       expect( utils.detectRenderer() ).toEqual( 'webgl' );
     }
     
+  });
+  
+});
+
+
+ /* 
+  * Specs for the Bar Cubes class
+  */
+
+describe("Bar Cube", function() {
+  
+  beforeEach(function() {
+    var zeroVec = new THREE.Vector3();
+    var scene = new THREE.Scene();
+  });
+  
+  afterEach(function() {
+    delete zeroVec;
+    delete scene;
+  });
+  
+  it ( 'should create a new bar object and has a standart size on the x axes', function () {
+    var label = document.createElement('div');
+    var nCube = new THREEGRAPHS.BarCube( "d9bd00", 0, 0, 7, "ffffff", 'full', { "row", "col" }, 0, 1, 10 );
+    nCube.add ( scene );
+    expect ( nCube.barobj.scale.x ).toEqual ( THREEGRAPHS.squareSize );
   });
   
 });

@@ -4,8 +4,15 @@
 
 var THREEGRAPHS = { };
 
-// MAIN settings 
+// MAIN VARIABLES 
 THREEGRAPHS.mouse = { x: -3000, y: -3000 };
+
+// MAIN SETTINGS
+THREEGRAPHS.Settings = 
+  {
+    labelId : "threegraphs-valuelable",
+    squareSize: 100
+  };
 
 /**
  * THE UTILITY FUNCTIONS CLASS
