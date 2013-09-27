@@ -121,14 +121,13 @@ describe("Pie Parts", function() {
   
   var scene = new THREE.Scene();
   
-  it ( 'should create a new bar object and has a standart size on the x axes', function () {
+  it ( 'should create a new pie object', function () {
     var label = document.createElement('div');
-    var pieP = new THREEGRAPHS.PiePart( 7, 20, 500, 0, {x:0,y:0}, 
-                                        THREEGRAPHS.Settings.extrudeOpts,
+    var pieP = new THREEGRAPHS.PiePart( 7, 20, 500, 0, {x:0,y:0},
                                         "d9bd00", "ffffff", 'full', false,
                                         { col:"col" } );
     pieP.addPie ( scene );
-    expect ( pieP.barobj.geometry.height ).toEqual( THREEGRAPHS.Settings.extrudeOpts.amount );
+    expect ( pieP.pieobj.geometry ).toBeDefined;
   });
   
 });
