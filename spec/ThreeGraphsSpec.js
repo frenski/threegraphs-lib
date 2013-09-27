@@ -107,7 +107,28 @@ describe("Bar Cube", function() {
     var label = document.createElement('div');
     var nCube = new THREEGRAPHS.BarCube( "d9bd00", 0, 0, 7, "ffffff", 'full', false, { row:"row", col:"col" }, 0, 10, 10 );
     nCube.addBar ( scene );
-    expect ( nCube.barobj.geometry.width ).toEqual ( THREEGRAPHS.Settings.squareSize );
+    expect ( nCube.barobj.geometry.width ).toEqual( THREEGRAPHS.Settings.squareSize );
+  });
+  
+});
+
+
+ /* 
+  * Specs for the Bar Cubes class
+  */
+
+describe("Pie Parts", function() {
+  
+  var scene = new THREE.Scene();
+  
+  it ( 'should create a new bar object and has a standart size on the x axes', function () {
+    var label = document.createElement('div');
+    var pieP = new THREEGRAPHS.PiePart( 7, 20, 500, 0, {x:0,y:0}, 
+                                        THREEGRAPHS.Settings.extrudeOpts,
+                                        "d9bd00", "ffffff", 'full', false,
+                                        { col:"col" } );
+    pieP.addPie ( scene );
+    expect ( pieP.barobj.geometry.height ).toEqual( THREEGRAPHS.Settings.extrudeOpts.amount );
   });
   
 });

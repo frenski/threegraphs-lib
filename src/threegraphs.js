@@ -17,8 +17,11 @@ THREEGRAPHS.Settings =
     backColor : "000000",
     yDeviation : 0,
     zDeviation : 0,
-    xDeviation : 0,
-    // To be recalculated in the init function
+    xDeviation : 0,   // To be recalculated in the init function
+    extrudeOpts : { amount: 150, 
+                    bevelEnabled: true, 
+                    bevelSegments: 5, 
+                    steps: 5 }
   };
 
 /**
