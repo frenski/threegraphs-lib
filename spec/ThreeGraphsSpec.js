@@ -104,7 +104,7 @@ describe("Bar Cube", function() {
   var scene = new THREE.Scene();
   
   var label = document.createElement('div');
-  var nCube = new THREEGRAPHS.BarCube( "d9bd00", 0, 0, 7, "ffffff", 'full', false, { row:"row", col:"col" }, 0, 10, 10 );
+  var nCube = new THREEGRAPHS.BarCube( "CC0000", 0, 0, 7, "ffffff", 'full', false, { row:"row", col:"col" }, 0, 10, 10 );
   nCube.addBar ( scene );
   
   it ( 'should create a new bar object', function () {
@@ -119,6 +119,9 @@ describe("Bar Cube", function() {
     expect ( nCube.barobj.geometry.height ).toEqual( 700 );
   });
   
+  it ( 'should have an RGB colour equal to the hex one defined', function () {
+    expect ( nCube.barobj.material.color.toString() ).toEqual( ({ r:0.8, g:0, b:0 }).toString() );
+  });
 });
 
 
@@ -133,7 +136,7 @@ describe("Pie Parts", function() {
   it ( 'should create a new pie object', function () {
     var label = document.createElement('div');
     var pieP = new THREEGRAPHS.PiePart( 7, 20, 500, 0, {x:0,y:0},
-                                        "d9bd00", "ffffff", 'full', false,
+                                        "CC0000", "ffffff", 'full', false,
                                         { col:"col" } );
     pieP.addPie ( scene );
     expect ( pieP.pieobj.geometry ).toBeDefined();
