@@ -622,5 +622,4 @@ THREEGRAPHS.AreaPoly = function( color, z, val, valcolor, render, html_label, ti
       return scaledVar = ( (val - minScaleVal)/scaleDif ) * valHeight;
     }
 
-
   };

@@ -164,3 +164,23 @@ describe("Area Pollies", function() {
   });
   
 });
+
+
+describe("Bar charts", function () {
+  
+  sData = { 
+          cols: [ { name:"col1", color:"CC0000" }, 
+                 { name:"col2", color:"00CC00" }
+               ],
+         rows: [ { name: "row 1", values: [5,6] }, 
+                 { name: "row 2", valies: [3,9] }
+               ]
+    };
+  
+  var newBarChart = new THREEGRAPHS.BarChart ( sData );
+  
+  it ( 'should instantiate the data variables', function () {
+    expect( newBarChart.dataValues[0][0] ).toEqual(5);
+  });
+  
+});
