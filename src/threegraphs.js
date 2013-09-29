@@ -11,8 +11,8 @@ THREEGRAPHS.touch = { device:false, x: -3000, y: -3000 };
 // MAIN SETTINGS
 THREEGRAPHS.Settings = 
   {
-    canvas: null,
     labelId : "threegraphs-valuelable",
+    staticUrl : 'img',
     squareSize : 100,
     squareStep : 200,
     valHeight : 1000,
@@ -750,6 +750,8 @@ THREEGRAPHS.BarChart = function ( schema ) {
 
 THREEGRAPHS.BarChart.prototype = {
   
+  canvas: null,
+  domContainer: null,
   constructor: THREEGRAPHS.BarChart,
   scene: null,
   camera: null,
@@ -809,7 +811,7 @@ THREEGRAPHS.BarChart.prototype = {
   initWebGLScene: function() { // Initiates a WEBGL Scene
     
     // Setting the renderer (with shadows)
-    if ( this.canvas ) {
+    if ( !this.canvas ) {
       this.renderer = new THREE.WebGLRenderer( { antialias: true } );
     }else{
       this.renderer = new THREE.WebGLRenderer( { antialias: true, 
@@ -822,6 +824,84 @@ THREEGRAPHS.BarChart.prototype = {
       this.renderer.shadowMapEnabled = true;
       this.renderer.shadowMapSoft = true;
     }
+    
+    if ( !this.domContainer ) {
+      this.domContainer = document.createElement( 'div' );
+      document.body.appendChild( this.domContainer );
+    } else {
+      this.domContainer = document.getElementById ( this.domContainer );
+    }
+    
+    // comment for Jasmine tests
+    // this.domContainer.appendChild( this.renderer.domElement );
+    
+    //*** Adding the grounds
+    // material for the grounds
+    var gridTex = THREE.ImageUtils.loadTexture(
+                   THREEGRAPHS.Settings.staticUrl+"/grid_pattern1.jpg");
+    gridTex.wrapS = gridTex.wrapT = THREE.RepeatWrapping;
+    gridTex.repeat.set( 5, 5 );
+
+    var gridTex2 = THREE.ImageUtils.loadTexture(
+                    THREEGRAPHS.Settings.staticUrl+"/grid_pattern2.jpg");
+    gridTex2.wrapS = gridTex2.wrapT = THREE.RepeatWrapping;
+    gridTex2.repeat.set( this.schema.rows.length, this.schema.cols.length );
+
+    var materialX = new THREE.MeshPhongMaterial({
+      ambient : 0x444444,
+      color : 0x777777,
+      shininess : 70, 
+      specular : 0x888888,
+      shading : THREE.SmoothShading,
+      side: THREE.DoubleSide,
+      map:gridTex2
+    });
+
+    var materialYZ = new THREE.MeshPhongMaterial({
+      ambient : 0x444444,
+      color : 0x999999,
+      shininess : 70, 
+      specular : 0x888888,
+      shading : THREE.SmoothShading,
+      side: THREE.DoubleSide,
+      map:gridTex
+    });
+
+    // Creating the ground-x
+    var geometry = new THREE.PlaneGeometry( 
+                        THREEGRAPHS.Settings.sqStep*this.schema.rows.length, 
+                        THREEGRAPHS.Settings.sqStep*this.schema.cols.length );
+
+    var groundX = new THREE.Mesh( geometry, materialX );
+    groundX.rotation.x -= Math.PI/2;
+    groundX.castShadow = false;
+    groundX.receiveShadow = true;
+    groundX.position.y = THREEGRAPHS.Settings.yDeviation;
+    this.scene.add( groundX );
+
+    // Creating the ground-y
+    var geometry = new THREE.PlaneGeometry( 
+                          THREEGRAPHS.Settings.sqStep*this.schema.rows.length, 
+                          THREEGRAPHS.Settings.valHeight );
+
+    var groundY = new THREE.Mesh( geometry, materialYZ );
+    groundY.castShadow = false;
+    groundY.receiveShadow = true;
+    groundY.position.z = THREEGRAPHS.Settings.zDeviation;
+    this.scene.add( groundY );
+
+    // craating the groynd-z
+    var geometry = new THREE.PlaneGeometry( 
+                          THREEGRAPHS.Settings.sqStep*this.schema.cols.length,
+                          THREEGRAPHS.Settings.valHeight );
+
+    var groundZ = new THREE.Mesh( geometry, materialYZ );
+    groundZ.rotation.y -= Math.PI/2;
+    groundZ.castShadow = false;
+    groundZ.receiveShadow = true;
+    groundZ.position.x = THREEGRAPHS.Settings.xDeviation;
+    this.scene.add( groundZ );
+    //////////////////
     
   }
   
