@@ -653,7 +653,14 @@ THREEGRAPHS.BarChart.prototype = {
   sTextCols: [],
   projector: null,
   scene: null,
-  camera: null
+  camera: null,
+  
+  initSceneVars : function (){
+    // Inits deviation position of the ground from the center
+    yDeviation = -(valHeight/2);
+    zDeviation = -(schema.cols.length*squareStep/2);
+    xDeviation = -(schema.rows.length*squareStep/2);
+  }
   
 };
 

@@ -183,4 +183,11 @@ describe("Bar charts", function () {
     expect( newBarChart.dataValues[0][0] ).toEqual(5);
   });
   
+  it ( ' should instantiate the scene variables ', function (){
+    expect( newBarChart.scene.visible ).toEqual(true);
+    expect( newBarChart.camera.position.x ).toEqual(100);
+    expect( THREEGRAPHS.zDeviation ).toEqual(200);
+  });
+  
+  
 });
