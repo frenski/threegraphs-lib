@@ -766,7 +766,7 @@ THREEGRAPHS.BarChart.prototype = {
   sTextCols: [],
   
   
-  initSceneVars : function (){ // Instantiates the main scene variable
+  initSceneVars : function () { // Initiates the main scene variable
     
     var utils =  new THREEGRAPHS.Utils();
     
@@ -803,6 +803,20 @@ THREEGRAPHS.BarChart.prototype = {
     this.camera.position.x = this.camPos.x;
     this.camera.position.y = this.camPos.y;
     this.camera.position.z = this.camPos.z;
+    
+  },
+  
+  initWebGLScene: function() { // Initiates a WEBGL Scene
+    
+    // Setting the renderer (with shadows)
+    this.renderer = new THREE.WebGLRenderer( { antialias: true } );
+    this.renderer.setSize( window.innerWidth, window.innerHeight );
+
+    // Switch off the shadows for safari due to the three.js bug with it
+    if ( navigator.userAgent.indexOf('Safari') != -1 ) {
+      this.renderer.shadowMapEnabled = true;
+      this.renderer.shadowMapSoft = true;
+    }
   }
   
 };

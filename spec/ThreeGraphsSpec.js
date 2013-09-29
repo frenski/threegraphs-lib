@@ -61,19 +61,19 @@ describe("Utils", function() {
     var canSupport = 0;
     if ( agent.indexOf('Firefox') != -1 ){
       canSupport = 1;
-      if ( parseFloat(navigator.userAgent.substring(navigator.userAgent.indexOf('Firefox') + 8)) >= 4 ){
+      if ( parseFloat(agent.substring(agent.indexOf('Firefox') + 8)) >= 4 ){
         canSupport = 2;
       }
     }
     if ( agent.indexOf('Chrome') != -1 ){
       canSupport = 1;
-      if ( parseFloat(navigator.userAgent.substring(navigator.userAgent.indexOf('Chrome') + 7).split(' ')[0]) >= 7 ){
+      if ( parseFloat(agent.substring(agent.indexOf('Chrome') + 7).split(' ')[0]) >= 7 ){
         canSupport = 2;
       }
     }
     if ( agent.indexOf('Safari') != -1 ){
       canSupport = 1;
-      if ( parseFloat(navigator.userAgent.substring(navigator.userAgent.indexOf('Version') + 8).split(' ')[0]) >= 5.1 ){
+      if ( parseFloat(agent.substring(agent.indexOf('Version') + 8).split(' ')[0]) >= 5.1 ){
         canSupport = 2;
       }
     }
