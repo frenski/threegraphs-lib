@@ -455,7 +455,7 @@ THREEGRAPHS.PiePart = function( val, totalval, radius, angprev, pos, color, valc
      if ( this.hasHTMLLabel ) {
        this.hasHTMLLabel.InnerHTML = this.titles.col + 
                                '<p>'+val+'</p>';
-       this.hasHTMLLabel.show();
+       this.hasHTMLLabel.style.display = 'block';
        // Back transformation of the coordinates
        posx = ( ( posx + 1 ) * window.innerWidth / 2 );
        posy = - ( ( posy - 1 ) * window.innerHeight / 2 );
@@ -470,10 +470,157 @@ THREEGRAPHS.PiePart = function( val, totalval, radius, angprev, pos, color, valc
 
      // Hides HTML Label if set - uses jquery for DOM manipulation
      if ( this.hasHTMLLabel ) {
-       this.hasHTMLLabel.hide();
+       this.hasHTMLLabel.style.display = 'none';
      }
 
    };
 
 
  };
+ 
+ /**
+  * a class for the Bar objects - @author Yane Frenski
+  */
+
+THREEGRAPHS.AreaPoly = function( color, z, val, valcolor, render, html_label, titles, minScaleVal, scaleDif, valHeight ) {
+
+    // The render type - can be light and full
+    this.renderType = render;
+
+    //the 3D cube object
+    this.areaobj = null;
+
+    // the 3D object for the text label
+    this.labelobj = null;
+
+    // should we set the wireframe
+    this.hasWireframe = true;
+
+    // should it have a label. The HTML one should point to a dom element
+    this.hasLabel = true;
+    this.hasHTMLLabel = html_label;
+
+    // should it cast/receive shadows
+    this.hasShadows = true;
+
+    // position in the quadrant
+    this.posz = z;
+
+    // value & height
+    this.val = val;
+
+    // rows and column titles
+    this.titles = titles;
+
+    // vars to calculate the values
+    this.minScaleVal = minScaleVal;
+    this.scaleDif = scaleDif;
+    this.valHeight = valHeight;
+
+    // extrude options
+    this.extrudeOpts = THREEGRAPHS.Settings.extrudeOpts;
+    
+    // main cube colour
+    this.color = parseInt(color,16);
+    this.htmlcolor = "#"+color;
+    this.valcolor = parseInt(valcolor,16);
+    var utils = new THREEGRAPHS.Utils ();
+    this.lumcolor = utils.colorLuminance( color, 0.5 );
+    this.darklumcolor = utils.colorLuminance( color, -0.3 );
+
+
+    // function to add the bar to the scene and position it
+    this.addArea = function( target ){
+      
+      // gets the square step from the settings
+      var sqStep = THREEGRAPHS.Settings.squareStep;
+
+      // starting points for X and Y
+      var startX = THREEGRAPHS.Settings.xDeviation + sqStep/2;
+      var startY = THREEGRAPHS.Settings.yDeviation;
+
+      // Shape geometry
+      var shape = new THREE.Shape();
+      shape.moveTo( startX, startY );
+
+      for (var i = 0; i < this.val.length; i++) {
+        shape.lineTo( startX + i*sqStep, startY + calcPointYPos( this.val[i], 
+                                       this.minScaleVal,
+                                       this.scaleDif,
+                                       this.valHeight) );
+      }
+      shape.lineTo( startX + ( this.val.length - 1)*sqStep , startY);
+      shape.lineTo( startX, startY );
+
+      var geometry = new THREE.ExtrudeGeometry( shape, this.extrudeOpts );
+
+      // Material for the bars with transparency
+      var material = new THREE.MeshPhongMaterial( {ambient: 0x000000,
+                                                   color: this.color,
+                                                   specular: 0x999999,
+                                                   shininess: 100,
+                                                   shading : THREE.SmoothShading,
+                                                   opacity:0.8,
+                                                   transparent: true
+                                                  } );
+
+      //  if we want a lower quality renderer - mainly with canvas renderer
+      if( this.renderType == 'light' ){
+        var material = new THREE.MeshLambertMaterial( { color: this.color, 
+                                            shading: THREE.FlatShading, 
+                                            overdraw: true } );
+        this.hasWireframe = false;
+        this.hasShadows = false;
+      }
+
+
+      // Creating the 3D object, positioning it and adding it to the scene
+      this.areaobj = new THREE.Mesh( geometry, material );
+      // Adds shadows if selected as an option
+      if( this.hasShadows ){
+        this.areaobj.castShadow = true;
+        this.areaobj.receiveShadow = true;
+      }
+      this.areaobj.position.z = THREEGRAPHS.Settings.zDeviation + this.posz*sqStep
+                                + sqStep/4 +this.extrudeOpts.amount/2;
+      target.add( this.areaobj );
+      
+    };
+
+    // function to show the label
+    this.showLabel = function( posx, posy){
+
+      // Shows HTML Label if set
+      if ( this.hasHTMLLabel ) {
+        var rowVals = "";
+        for ( var i=0; i<this.titles.row.length; i++ ){
+          rowVals += this.titles.row[i].name + ": " + this.val[i] + "<br>";
+        }
+        this.hasHTMLLabel.InnerHTML = this.titles.col + 
+                                '<p>' + rowVals + '</p>';
+        this.hasHTMLLabel.style.display = 'block';
+        // Back transformation of the coordinates
+        posx = ( ( posx + 1 ) * window.innerWidth / 2 );
+        posy = - ( ( posy - 1 ) * window.innerHeight / 2 );
+        this.hasHTMLLabel.style.left = posx;
+        this.hasHTMLLabel.style.top = posy;
+      }
+
+    };
+
+    // function to hide the label
+    this.hideLabel = function(){
+
+      // Hides HTML Label if set - uses jquery for DOM manipulation
+      if ( this.hasHTMLLabel ) {
+        this.hasHTMLLabel.style.display = 'none';
+      }
+
+    };
+
+    var calcPointYPos = function ( val , minScaleVal , scaleDif ,valHeight ) {
+      return scaledVar = ( (val - minScaleVal)/scaleDif ) * valHeight;
+    }
+
+
+  };
