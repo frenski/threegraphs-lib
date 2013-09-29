@@ -764,7 +764,8 @@ THREEGRAPHS.BarChart.prototype = {
   sTextRows: [],
   sTextCols: [],
   
-  initSceneVars : function (){
+  
+  initSceneVars : function (){ // Instantiates the main scene variable
     
     var utils =  new THREEGRAPHS.Utils();
     
