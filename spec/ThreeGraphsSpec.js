@@ -103,10 +103,15 @@ describe("Bar Cube", function() {
   
   var scene = new THREE.Scene();
   
-  it ( 'should create a new bar object and has a standart size on the x axes', function () {
-    var label = document.createElement('div');
-    var nCube = new THREEGRAPHS.BarCube( "d9bd00", 0, 0, 7, "ffffff", 'full', false, { row:"row", col:"col" }, 0, 10, 10 );
-    nCube.addBar ( scene );
+  var label = document.createElement('div');
+  var nCube = new THREEGRAPHS.BarCube( "d9bd00", 0, 0, 7, "ffffff", 'full', false, { row:"row", col:"col" }, 0, 10, 10 );
+  nCube.addBar ( scene );
+  
+  it ( 'should create a new bar object', function () {
+    expect ( nCube.barobj.geometry ).toBeDefined();
+  });
+  
+  it ( 'should have a width size equate to the sqare size defined', function () {
     expect ( nCube.barobj.geometry.width ).toEqual( THREEGRAPHS.Settings.squareSize );
   });
   
@@ -127,7 +132,7 @@ describe("Pie Parts", function() {
                                         "d9bd00", "ffffff", 'full', false,
                                         { col:"col" } );
     pieP.addPie ( scene );
-    expect ( pieP.pieobj.geometry ).toBeDefined;
+    expect ( pieP.pieobj.geometry ).toBeDefined();
   });
   
 });
