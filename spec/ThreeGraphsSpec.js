@@ -111,8 +111,12 @@ describe("Bar Cube", function() {
     expect ( nCube.barobj.geometry ).toBeDefined();
   });
   
-  it ( 'should have a width size equate to the sqare size defined', function () {
+  it ( 'should have a width equal to the sqare size defined', function () {
     expect ( nCube.barobj.geometry.width ).toEqual( THREEGRAPHS.Settings.squareSize );
+  });
+  
+  it ( 'should have a height equal to value percentage ot the max value and the height of the scales', function () {
+    expect ( nCube.barobj.geometry.height ).toEqual( 700 );
   });
   
 });
