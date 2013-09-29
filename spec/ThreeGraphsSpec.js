@@ -102,7 +102,6 @@ describe("Utils", function() {
 describe("Bar Cube", function() {
   
   var scene = new THREE.Scene();
-  
   var label = document.createElement('div');
   var nCube = new THREEGRAPHS.BarCube( "CC0000", 0, 0, 7, "ffffff", 'full', false, { row:"row", col:"col" }, 0, 10, 10 );
   nCube.addBar ( scene );
@@ -144,6 +143,24 @@ describe("Pie Parts", function() {
   
   it ( 'should have an RGB colour equal to the hex one defined', function () {
     expect ( pieP.pieobj.material.color.toString() ).toEqual( ({ r:0.8, g:0, b:0 }).toString() );
+  });
+  
+});
+
+
+describe("Area Pollies", function() {
+  
+  var scene = new THREE.Scene();
+  var label = document.createElement('div');
+  var nArea = new THREEGRAPHS.AreaPoly( "CC0000", 0, [3,7,2], "ffffff", 'full', false, { row:"row", col:"col" }, 0, 10, 10 );
+  nArea.addArea ( scene );
+  
+  it ( 'should create a new area object', function () {
+    expect ( nArea.areaobj.geometry ).toBeDefined();
+  });
+  
+  it ( 'should have an RGB colour equal to the hex one defined', function () {
+    expect ( nArea.areaobj.material.color.toString() ).toEqual( ({ r:0.8, g:0, b:0 }).toString() );
   });
   
 });
