@@ -170,47 +170,30 @@ describe("Bar charts", function () {
   
   var sData;
   var newBarChart;
-  
-  beforeEach ( function(){
-    
-    el = document.createElement("div");
-    el.setAttribute("id", "threegraphs-container");
-    document.body.appendChild(el);
-    
-    sData = { 
-            cols: [ { name:"col1", color:"CC0000" }, 
-                   { name:"col2", color:"00CC00" }
-                 ],
-           rows: [ { name: "row 1", values: [5,6] }, 
-                   { name: "row 2", values: [3,9] }
-                 ]
-      };
-
-    newBarChart = new THREEGRAPHS.BarChart ( sData );
-    newBarChart.domContainer = "threegraphs-container";
-    newBarChart.initSceneVars();
-    // Testing only the WebGL renderer
-    newBarChart.initWebGLScene();
-    
-  });
-  
-  afterEach (function (){
-    newBarChart = null;
-    document.getElementById ( 'threegraphs-container' ).InnerHTML = '';
-  });
+  var sData = { 
+          cols: [ { name:"col1", color:"CC0000" }, 
+                 { name:"col2", color:"00CC00" }
+               ],
+         rows: [ { name: "row 1", values: [5,6] }, 
+                 { name: "row 2", values: [3,9] }
+               ]
+    };
   
   it ( 'should instantiate the data variables', function () {
+    newBarChart = new THREEGRAPHS.BarChart ( sData );
     expect( newBarChart.dataValues[0][0] ).toEqual(5);
   });
 
   
   it ( ' should instantiate the scene variables ', function (){
+    newBarChart.initSceneVars();
     expect( newBarChart.scene.visible ).toEqual(true);
     expect( newBarChart.camera.position.x ).toEqual(500);
     expect( THREEGRAPHS.Settings.zDeviation ).toEqual(-200);
   });
   
   it ( 'should instantiate the renderer', function () {
+    newBarChart.initWebGLScene();
     expect( newBarChart.renderer.domElement ).toBeDefined();
   });
 
@@ -220,14 +203,14 @@ describe("Bar charts", function () {
     expect( newBarChart.scene.children[2].geometry.vertices.length ).toEqual(4);
   });
   
-  // it( 'should add text for the scales', function () {
-  //   expect( newBarChart.sTextCols[0].txtobj.geometry.size ).toEqual(30);
-  // });
-  // 
-  // it( 'should create bars with the same amount as the data itmes', function () {
-  //   expect( newBarChart.bars.length).toEqual(4);
-  // });
-  // 
+  it( 'should add text for the scales', function () {
+    expect( newBarChart.sTextCols[0].txtobj.geometry ).toBeDefined();
+  });
+  
+  it( 'should create bars with the same amount as the data itmes', function () {
+    expect( newBarChart.bars.length ).toEqual(4);
+  });
+  
   // it( 'should create lights', function () {
   //   expect( newBarChart.scene.lights[2].position.x).toEqual(600);
   // });

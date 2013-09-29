@@ -735,6 +735,104 @@ THREEGRAPHS.AreaPoly = function( color, z, val, valcolor, render, html_label, ti
 
 
 /**
+ * A CLASS FOR THE SCALE TEXT
+ */
+
+THREEGRAPHS.ScaleText = function( text, type, pos, color, yStep ) {
+  
+  // the 3D object for the text label
+  this.txtobj = null;
+  
+  // type: can be "val", "col", "row"
+  this.ttype = type;
+  
+  // text
+  this.txt = text;
+  
+  // position
+  this.position = pos;
+  
+  // the difirance in position according y axis
+  this.yStep = yStep;
+  
+  // the color
+  this.color = 0x555555;
+  if ( color ) this.color = parseInt(color,16);
+  
+  // label vars
+  this.textSize = 30;
+  this.textHeight = 5;
+  this.textFont = "helvetiker";
+  this.letterSize = 7 // this depends on the font
+  
+  // function to add the bar to the scene and position it
+  this.addText = function( target ){
+        
+      // Create a three.js text geometry
+    var geometry = new THREE.TextGeometry( this.txt, {
+      size: this.textSize,
+      height: this.textHeight,
+      curveSegments: 3,
+      font: this.textFont,
+      weight: "bold",
+      style: "normal",
+      bevelEnabled: false
+    });
+
+    var material = new THREE.MeshPhongMaterial( { color: this.color, shading: THREE.FlatShading } );
+      
+    // Positions the text and adds it to the scene
+    this.txtobj = new THREE.Mesh( geometry, material );
+    
+    if( this.ttype == "col" ) {
+      this.txtobj.position.x = -THREEGRAPHS.Settings.xDeviation + 
+                                THREEGRAPHS.Settings.sqStep/5;
+      this.txtobj.position.y = -THREEGRAPHS.Settings.zDeviation - 
+                                this.position * THREEGRAPHS.Settings.sqStep -
+                                THREEGRAPHS.Settings.sqStep/2;
+    } else if ( type == "row" ){
+      this.txtobj.rotation.z = Math.PI/2;
+      this.txtobj.position.x = THREEGRAPHS.Settings.xDeviation + 
+                               this.position * THREEGRAPHS.Settings.sqStep +
+                               THREEGRAPHS.Settings.sqStep/2;
+      this.txtobj.position.y = THREEGRAPHS.Settings.zDeviation - 
+                               THREEGRAPHS.Settings.sqStep/5 - this.txt.length *
+                               ( this.textSize -  this.letterSize );
+    } else {
+      this.txtobj.rotation.y = Math.PI/2;
+      this.txtobj.position.x = -THREEGRAPHS.Settings.zDeviation;
+      this.txtobj.position.z = THREEGRAPHS.Settings.sqStep/5 + this.txt.length *
+                               ( this.textSize -  this.letterSize );
+      this.txtobj.position.y = THREEGRAPHS.Settings.yDeviation + this.position * 
+                               yStep - this.textSize/2;
+    }
+    
+    target.add( this.txtobj );
+
+  };
+  
+  // function to show the label
+  this.highlightText = function(){
+  
+    if(this.hasLabel){
+      this.labelobj.visible = true;
+    }  
+    
+  };
+  
+  // function to hide the label
+  this.unhighlightText = function(){
+  
+    if(this.hasLabel){
+      this.labelobj.visible = false;
+    }  
+    
+  };
+  
+};
+
+
+/**
  * BAR CHART OBJECT
  */
 
@@ -902,6 +1000,48 @@ THREEGRAPHS.BarChart.prototype = {
     groundZ.position.x = THREEGRAPHS.Settings.xDeviation;
     this.scene.add( groundZ );
     //////////////////
+    
+    //*** Adding texts for the scales
+    for( var i=0; i<this.schema.cols.length; i++ ) {
+      this.sTextCols[i] = new THREEGRAPHS.ScaleText( this.schema.cols[i].name,
+                                "col", i, this.schema.cols[i].color );
+      this.sTextCols[i].addText(groundX);
+    }
+
+    for( var i=0; i<this.schema.rows.length; i++ ) {
+      this.sTextRows[i] = new THREEGRAPHS.ScaleText( this.schema.rows[i].name,
+                                "row", i, THREEGRAPHS.Settings.scaleTextColor);
+      this.sTextRows[i].addText(groundX);
+    }
+
+    var yStep = THREEGRAPHS.Settings.valHeight/this.niceScale.tickNum;
+    for ( var i=0; i<= this.niceScale.tickNum; i++ ) {
+      var val = this.niceScale.niceMin + i*this.niceScale.tickSpacing;
+      var stringVal = val.toString();
+      this.sTextVals[i] = new THREEGRAPHS.ScaleText(stringVal, "val", i, 
+                                   this.scaleTextColor, yStep);
+      this.sTextVals[i].addText(groundZ);
+    }
+    
+    //*** Adding bars
+    for ( var i=0; i<this.schema.cols.length; i++ ) {
+      for (var j=0; j<this.schema.rows.length; j++ ) {
+        this.bars.push( new THREEGRAPHS.BarCube( 
+                                this.schema.cols[i].color, j, i,
+                                this.dataValues[i][j], 
+                                THREEGRAPHS.SettingsvalTextColor, 'full', null,
+                                { row:this.schema.rows[j].name, 
+                                  col:this.schema.cols[i].name },
+                                  this.niceScale.niceMin, 
+                                  this.niceScale.range, 
+                                  this.valHeight ) );
+        this.bars[this.bars.length-1].addBar(this.scene);
+        // Adds the bars objects to ones that need to be checked for intersection
+        // This is used for the moseover action
+        this.intersobj[this.bars.length-1] = this.bars[this.bars.length-1].barobj;
+        this.intersobj[this.bars.length-1].barid = this.bars.length-1;
+      }
+    }
     
   }
   
