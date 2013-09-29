@@ -6,6 +6,7 @@ var THREEGRAPHS = { };
 
 // MAIN VARIABLES 
 THREEGRAPHS.mouse = { x: -3000, y: -3000 };
+THREEGRAPHS.touch = { device:false, x: -3000, y: -3000 };
 
 // MAIN SETTINGS
 THREEGRAPHS.Settings = 
@@ -641,7 +642,18 @@ THREEGRAPHS.BarChart = function ( schema ) {
 
 THREEGRAPHS.BarChart.prototype = {
   
-  constructor: THREEGRAPHS.BarChart
+  constructor: THREEGRAPHS.BarChart,
+  INTERSECTED: null,
+  intersectedId: null,
+  niceScale: null,
+  bars: [],
+  intersobj: [],
+  sTextVals: [],
+  sTextRows: [],
+  sTextCols: [],
+  projector: null,
+  scene: null,
+  camera: null
   
-}
+};
 
