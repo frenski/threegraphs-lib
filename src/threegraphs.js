@@ -1043,6 +1043,28 @@ THREEGRAPHS.BarChart.prototype = {
       }
     }
     
+    //*** Adding the lights
+    var light = new THREE.DirectionalLight( 0x999999 );
+    light.position.set( 1, -1, 1 ).normalize();
+    this.scene.add( light );
+
+    var light = new THREE.DirectionalLight( 0x999999 );
+    light.position.set( -1, 1, -1 ).normalize();
+    this.scene.add( light );
+
+    light = new THREE.SpotLight( 0xd8d8d8, 2 );
+    light.position.set( 600, 3000, 1500 );
+    light.target.position.set( 0, 0, 0 );
+
+    light.shadowCameraNear = 1000;
+    light.shadowCameraFar = 5000;
+    light.shadowCameraFov = 40;
+    light.castShadow = true;
+    light.shadowDarkness = 0.3;
+    light.shadowBias = 0.0001;
+    this.scene.add( light );
+    ////////////////////
+    
   }
   
 };

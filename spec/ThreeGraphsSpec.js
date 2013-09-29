@@ -211,8 +211,9 @@ describe("Bar charts", function () {
     expect( newBarChart.bars.length ).toEqual(4);
   });
   
-  // it( 'should create lights', function () {
-  //   expect( newBarChart.scene.lights[2].position.x).toEqual(600);
-  // });
+  it( 'should create lights', function () {
+    console.log ( newBarChart.scene );
+    expect( newBarChart.scene.__lights[2].position.x).toEqual(600);
+  });
   
 });
