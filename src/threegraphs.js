@@ -479,7 +479,7 @@ THREEGRAPHS.PiePart = function( val, totalval, radius, angprev, pos, color, valc
  };
  
  /**
-  * a class for the Bar objects - @author Yane Frenski
+  * AREA POLY CLASS
   */
 
 THREEGRAPHS.AreaPoly = function( color, z, val, valcolor, render, html_label, titles, minScaleVal, scaleDif, valHeight ) {
@@ -622,4 +622,26 @@ THREEGRAPHS.AreaPoly = function( color, z, val, valcolor, render, html_label, ti
       return scaledVar = ( (val - minScaleVal)/scaleDif ) * valHeight;
     }
 
-  };
+};
+
+
+/**
+ * BAR CHART OBJECT
+ */
+
+THREEGRAPHS.BarChart = function ( schema ) {
+  
+  this.schema = schema || 0;
+  this.dataValues = [];
+  for ( var i=0; i<schema.rows.length; i++ ){
+    this.dataValues[i] = schema.rows[i].values;
+  }
+  
+};
+
+THREEGRAPHS.BarChart.prototype = {
+  
+  constructor: THREEGRAPHS.BarChart
+  
+}
+
