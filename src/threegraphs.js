@@ -809,7 +809,12 @@ THREEGRAPHS.BarChart.prototype = {
   initWebGLScene: function() { // Initiates a WEBGL Scene
     
     // Setting the renderer (with shadows)
-    this.renderer = new THREE.WebGLRenderer( { antialias: true } );
+    if ( this.canvas ) {
+      this.renderer = new THREE.WebGLRenderer( { antialias: true } );
+    }else{
+      this.renderer = new THREE.WebGLRenderer( { antialias: true, 
+                                                 canvas: this.canvas } );
+    }
     this.renderer.setSize( window.innerWidth, window.innerHeight );
 
     // Switch off the shadows for safari due to the three.js bug with it
@@ -817,6 +822,7 @@ THREEGRAPHS.BarChart.prototype = {
       this.renderer.shadowMapEnabled = true;
       this.renderer.shadowMapSoft = true;
     }
+    
   }
   
 };
