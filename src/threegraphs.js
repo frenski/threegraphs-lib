@@ -11,6 +11,7 @@ THREEGRAPHS.touch = { device:false, x: -3000, y: -3000 };
 // MAIN SETTINGS
 THREEGRAPHS.Settings = 
   {
+    canvas: null,
     labelId : "threegraphs-valuelable",
     squareSize : 100,
     squareStep : 200,

@@ -191,5 +191,27 @@ describe("Bar charts", function () {
     expect( THREEGRAPHS.Settings.zDeviation ).toEqual(-200);
   });
   
+  // Testing only the WebGL renderer
+  newBarChart.initWebGLScene();
+  
+  it ( 'should instantiate the renderer', function () {
+    expect( newBarChart.renderer.domElement ).toBeDefined();
+  });
+  
+  it ( 'should add grounds', function () {
+    expect( newBarChart.scene.groundX.geometry.width ).toEqual(400);
+  });
+  
+  it( 'should add text for the scales', function () {
+    expect( newBarChart.sTextCols[0].txtobj.geometry.size ).toEqual(30);
+  });
+  
+  it( 'should create bars with the same amount as the data itmes', function () {
+    expect( newBarChart.bars.length).toEqual(4);
+  });
+  
+  it( 'should create lights', function () {
+    expect( newBarChart.scene.lights[2].position.x).toEqual(600);
+  });
   
 });
