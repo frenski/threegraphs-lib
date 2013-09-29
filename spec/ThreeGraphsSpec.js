@@ -132,14 +132,18 @@ describe("Bar Cube", function() {
 describe("Pie Parts", function() {
   
   var scene = new THREE.Scene();
+  var label = document.createElement('div');
+  var pieP = new THREEGRAPHS.PiePart( 7, 20, 500, 0, {x:0,y:0},
+                                      "CC0000", "ffffff", 'full', false,
+                                      { col:"col" } );
+  pieP.addPie ( scene );
   
   it ( 'should create a new pie object', function () {
-    var label = document.createElement('div');
-    var pieP = new THREEGRAPHS.PiePart( 7, 20, 500, 0, {x:0,y:0},
-                                        "CC0000", "ffffff", 'full', false,
-                                        { col:"col" } );
-    pieP.addPie ( scene );
     expect ( pieP.pieobj.geometry ).toBeDefined();
+  });
+  
+  it ( 'should have an RGB colour equal to the hex one defined', function () {
+    expect ( pieP.pieobj.material.color.toString() ).toEqual( ({ r:0.8, g:0, b:0 }).toString() );
   });
   
 });
