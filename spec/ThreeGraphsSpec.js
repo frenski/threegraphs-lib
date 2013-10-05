@@ -212,7 +212,6 @@ describe("Bar charts", function () {
   });
   
   it( 'should create lights', function () {
-    console.log ( newBarChart.scene );
     expect( newBarChart.scene.__lights[2].position.x).toEqual(600);
   });
   
