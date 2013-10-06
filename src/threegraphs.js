@@ -24,7 +24,8 @@ THREEGRAPHS.Settings =
     extrudeOpts : { amount: 150, 
                     bevelEnabled: true, 
                     bevelSegments: 5, 
-                    steps: 5 }
+                    steps: 5 },
+    replaceImage : null;
   };
 
 /**
@@ -208,6 +209,19 @@ THREEGRAPHS.Utils.prototype.detectRenderer = function ( ){
     return 'none';
   }
 };
+
+THREEGRAPHS.Utils.prototype.nonSupportedBrowsers = function ( ){
+  var noBrowserDiv = document.createElement( 'div' );
+  document.body.appendChild( noBrowserDiv );
+  if( THREEGRAPHS.Utils.Settings.replaceImage ) {
+    noBrowserDiv.innerHTML = '<img id="non-supported-img" src="'
+                               +replaceImage+'" />' );
+  }else{
+    noBrowserDiv.innerHTML = '<div id="non-supported-errormsg" />Unfortunately'+
+                             'your browser doesn\'t support the threegraphs '+
+                             'editor. Please use Chrome, Firefox 4+, Internet '+
+                             'Explorer 9+, Safari 5+, or Opera.</div>';
+  }
 
 
 /**
@@ -1087,7 +1101,7 @@ THREEGRAPHS.BarChart.prototype = {
       this.initCanvasScene ();
     }
     else {
-      nonSupportedBrowsers();
+      utils.nonSupportedBrowsers();
     }
 
     this.controls = utils.mouseControls ( this.camera , 500, 3500 );
