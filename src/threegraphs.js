@@ -159,6 +159,8 @@ THREEGRAPHS.Utils.prototype.initLegend = function ( el, schema ){
 
 THREEGRAPHS.Utils.prototype.mouseControls  = function ( renderer, camera, minDist, maxDist ){
   
+  var controls;
+  
   if ( this.isTouchDevice () ){
     controls = new THREE.TrackballControlsTouch( camera, renderer.domElement );
   }else{
@@ -851,6 +853,7 @@ THREEGRAPHS.BarChart.prototype = {
   canvas: null,
   domContainer: null,
   constructor: THREEGRAPHS.BarChart,
+  controls: null,
   scene: null,
   camera: null,
   camPos: { x: 500, y: 500, z: 1600 },
@@ -1064,6 +1067,30 @@ THREEGRAPHS.BarChart.prototype = {
     light.shadowBias = 0.0001;
     this.scene.add( light );
     ////////////////////
+    
+  },
+  
+  init: function() {
+    
+    var utils = new THREEGRAPHS.Utils( );
+    
+    // Detecting the renderer:
+    var browserRender = utils.detectRenderer ( );
+
+    // Init vars and scene depending on the renderer
+    if ( browserRender == 'webgl' ) {
+      this.initSceneVars ();
+      this.initWebGLScene ();
+    }
+    else if ( browserRender == 'canvas' ) {
+      this.initSceneVars ();
+      this.initCanvasScene ();
+    }
+    else {
+      nonSupportedBrowsers();
+    }
+
+    this.controls = utils.mouseControls ( this.camera , 500, 3500 );
     
   }
   
