@@ -215,4 +215,9 @@ describe("Bar charts", function () {
     expect( newBarChart.scene.__lights[2].position.x).toEqual(600);
   });
   
+  it( 'should init the controls', function () {
+    newBarChart.init();
+    expect( newBarChart.controls ).not.toEqual( null );
+  });
+  
 });
