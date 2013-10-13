@@ -25,7 +25,7 @@ THREEGRAPHS.Settings =
                     bevelEnabled: true, 
                     bevelSegments: 5, 
                     steps: 5 },
-    replaceImage : null;
+    replaceImage : null
   };
 
 /**
@@ -214,14 +214,15 @@ THREEGRAPHS.Utils.prototype.nonSupportedBrowsers = function ( ){
   var noBrowserDiv = document.createElement( 'div' );
   document.body.appendChild( noBrowserDiv );
   if( THREEGRAPHS.Utils.Settings.replaceImage ) {
-    noBrowserDiv.innerHTML = '<img id="non-supported-img" src="'
-                               +replaceImage+'" />' );
+    noBrowserDiv.innerHTML = '<img id="non-supported-img" src="'+
+                              replaceImage+'" />';
   }else{
     noBrowserDiv.innerHTML = '<div id="non-supported-errormsg" />Unfortunately'+
                              'your browser doesn\'t support the threegraphs '+
                              'editor. Please use Chrome, Firefox 4+, Internet '+
                              'Explorer 9+, Safari 5+, or Opera.</div>';
   }
+};
 
 
 /**
@@ -848,6 +849,65 @@ THREEGRAPHS.ScaleText = function( text, type, pos, color, yStep ) {
 };
 
 
+THREEGRAPHS.animate = function ( obj ){
+  
+  var animateSc = function (){
+    
+    requestAnimationFrame( animateSc );
+    
+    // Updateing the controls for the trackball camera
+    obj.controls.update();
+
+    // url: http://mrdoob.github.com/three.js/examples/webgl_interactive_cubes.html
+
+    // Checks first if it's touch or mouse device
+    if ( !THREEGRAPHS.touch.device ) {
+      var actCoord = { x: THREEGRAPHS.mouse.x, y: THREEGRAPHS.mouse.y };
+    } else {
+      var actCoord = { x: THREEGRAPHS.touch.x, y: THREEGRAPHS.touch.y };
+    }
+
+    var vector = new THREE.Vector3( actCoord.x, actCoord.y, 1 );
+    
+    obj.projector.unprojectVector( vector, obj.camera );
+    
+    var ray = new THREE.Ray( obj.camera.position, 
+                             vector.subSelf( obj.camera.position ).normalize() );
+    var intersects = ray.intersectObjects( obj.intersobj );
+    
+    if ( intersects.length > 0 ) {
+      if ( obj.INTERSECTED != intersects[ 0 ].object ) {
+        if ( obj.INTERSECTED ) {
+          obj.INTERSECTED.material.emissive.setHex( 
+            obj.INTERSECTED.currentHex );
+          obj.bars[obj.intersectedId].hideLabel();
+        }
+        obj.INTERSECTED = intersects[ 0 ].object;
+        obj.INTERSECTED.currentHex = obj.INTERSECTED.material.emissive.getHex();
+        obj.INTERSECTED.material.emissive.setHex( 
+          parseInt( obj.bars[intersects[0].object.barid].darklumcolor, 16 ) );
+        obj.bars[intersects[0].object.barid].showLabel( actCoord.x, 
+                                                         actCoord.y );
+        obj.intersectedId = intersects[0].object.barid;
+      }
+    } else {
+      if ( obj.INTERSECTED ) {
+        obj.INTERSECTED.material.emissive.setHex( 
+          obj.INTERSECTED.currentHex );
+        obj.bars[obj.intersectedId].hideLabel();
+      }
+      obj.intersectedId = null;
+      obj.INTERSECTED = null;
+    }
+
+    obj.renderer.render( obj.scene, obj.camera );
+    
+  }
+  
+  animateSc ();
+
+}
+
 /**
  * BAR CHART OBJECT
  */
@@ -946,6 +1006,8 @@ THREEGRAPHS.BarChart.prototype = {
     } else {
       this.domContainer = document.getElementById ( this.domContainer );
     }
+    
+    this.domContainer.appendChild( this.renderer.domElement );
     
     // comment for Jasmine tests
     // this.domContainer.appendChild( this.renderer.domElement );
@@ -1103,8 +1165,9 @@ THREEGRAPHS.BarChart.prototype = {
     else {
       utils.nonSupportedBrowsers();
     }
-
-    this.controls = utils.mouseControls ( this.camera , 500, 3500 );
+    
+    this.controls = utils.mouseControls ( this.camera, this.camera , 500, 3500 );
+    THREEGRAPHS.animate ( this );
     
   }
   
