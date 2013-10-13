@@ -1105,15 +1105,16 @@ THREEGRAPHS.BarChart.prototype = {
     //*** Adding bars
     for ( var i=0; i<this.schema.cols.length; i++ ) {
       for (var j=0; j<this.schema.rows.length; j++ ) {
-        this.bars.push( new THREEGRAPHS.BarCube( 
-                                this.schema.cols[i].color, j, i,
-                                this.dataValues[i][j], 
-                                THREEGRAPHS.SettingsvalTextColor, 'full', null,
-                                { row:this.schema.rows[j].name, 
-                                  col:this.schema.cols[i].name },
-                                  this.niceScale.niceMin, 
-                                  this.niceScale.range, 
-                                  this.valHeight ) );
+        this.bars.push( 
+          new THREEGRAPHS.BarCube( 
+                this.schema.cols[i].color, j, i, this.dataValues[i][j],
+                THREEGRAPHS.SettingsvalTextColor, 'full',
+                document.getElementById( THREEGRAPHS.Settings.labelId),
+                { row:this.schema.rows[j].name, 
+                  col:this.schema.cols[i].name },
+                  this.niceScale.niceMin, 
+                  this.niceScale.range, 
+                  this.valHeight ) );
         this.bars[this.bars.length-1].addBar(this.scene);
         // Adds the bars objects to ones that need to be checked for intersection
         // This is used for the moseover action
