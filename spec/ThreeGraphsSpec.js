@@ -192,7 +192,7 @@ describe("Bar charts", function () {
     expect( THREEGRAPHS.Settings.zDeviation ).toEqual(-200);
   });
   
-  it ( 'should instantiate the renderer', function () {
+  it ( 'should instantiate the WebGL renderer', function () {
     newBarChart.initWebGLScene();
     expect( newBarChart.renderer.domElement ).toBeDefined();
   });
@@ -220,6 +220,14 @@ describe("Bar charts", function () {
     newBarChart = new THREEGRAPHS.BarChart ( sData );
     newBarChart.init();
     expect( newBarChart.controls ).not.toEqual( null );
+  });
+  
+  it ( 'should instantiate the Canvas renderer', function () {
+    newBarChart = null;
+    newBarChart = new THREEGRAPHS.BarChart ( sData );
+    newBarChart.initSceneVars();
+    newBarChart.initCanvasScene();
+    expect( newBarChart.renderer.domElement ).toBeDefined();
   });
   
 });
