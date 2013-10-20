@@ -451,8 +451,8 @@ THREEGRAPHS.BarCube = function( color, x, z, val, valcolor, render, html_label, 
        // Back transformation of the coordinates
        posx = ( ( posx + 1 ) * window.innerWidth / 2 );
        posy = - ( ( posy - 1 ) * window.innerHeight / 2 );
-       this.hasHTMLLabel.style.left = posx;
-       this.hasHTMLLabel.style.top = posy;
+       this.hasHTMLLabel.style.left = posx + 'px';
+       this.hasHTMLLabel.style.top = posy + 'px';
      }
 
    };
@@ -1010,9 +1010,6 @@ THREEGRAPHS.BarChart.prototype = {
     }
     
     this.domContainer.appendChild( this.renderer.domElement );
-    
-    // comment for Jasmine tests
-    // this.domContainer.appendChild( this.renderer.domElement );
     
     //*** Adding the grounds
     // material for the grounds
