@@ -1168,7 +1168,7 @@ THREEGRAPHS.BarChart.prototype = {
       utils.nonSupportedBrowsers();
     }
     
-    this.controls = utils.mouseControls ( this.camera, this.camera , 500, 3500 );
+    this.controls = utils.mouseControls ( this.renderer, this.camera , 500, 3500 );
     THREEGRAPHS.animate ( this );
     
   }
