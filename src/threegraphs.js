@@ -1042,11 +1042,13 @@ THREEGRAPHS.BarChart.prototype = {
       side: THREE.DoubleSide,
       map:gridTex
     });
+    
+    var sqStep = THREEGRAPHS.Settings.squareStep;
+    var valH = THREEGRAPHS.Settings.valHeight
 
     // Creating the ground-x
-    var geometry = new THREE.PlaneGeometry( 
-                        THREEGRAPHS.Settings.sqStep*this.schema.rows.length, 
-                        THREEGRAPHS.Settings.sqStep*this.schema.cols.length );
+    var geometry = new THREE.PlaneGeometry( sqStep*this.schema.rows.length,
+                                            sqStep*this.schema.cols.length );
 
     var groundX = new THREE.Mesh( geometry, materialX );
     groundX.rotation.x -= Math.PI/2;
@@ -1057,8 +1059,8 @@ THREEGRAPHS.BarChart.prototype = {
 
     // Creating the ground-y
     var geometry = new THREE.PlaneGeometry( 
-                          THREEGRAPHS.Settings.sqStep*this.schema.rows.length,
-                          THREEGRAPHS.Settings.valHeight );
+                           sqStep*this.schema.rows.length,
+                           valH);
 
     var groundY = new THREE.Mesh( geometry, materialYZ );
     groundY.castShadow = false;
@@ -1068,8 +1070,8 @@ THREEGRAPHS.BarChart.prototype = {
 
     // craating the groynd-z
     var geometry = new THREE.PlaneGeometry( 
-                          THREEGRAPHS.Settings.sqStep*this.schema.cols.length,
-                          THREEGRAPHS.Settings.valHeight );
+                          sqStep*this.schema.cols.length,
+                          valH );
 
     var groundZ = new THREE.Mesh( geometry, materialYZ );
     groundZ.rotation.y -= Math.PI/2;
