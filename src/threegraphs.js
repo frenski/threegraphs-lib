@@ -997,7 +997,7 @@ THREEGRAPHS.BarChart.prototype = {
     this.renderer.setSize( window.innerWidth, window.innerHeight );
 
     // Switch off the shadows for safari due to the three.js bug with it
-    if ( navigator.userAgent.indexOf('Safari') != -1 ) {
+    if ( navigator.userAgent.indexOf('Safari') == -1 ) {
       this.renderer.shadowMapEnabled = true;
       this.renderer.shadowMapSoft = true;
     }
