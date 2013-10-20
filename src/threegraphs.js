@@ -961,10 +961,12 @@ THREEGRAPHS.BarChart.prototype = {
     );
     this.niceScale.calculate ();
     
-    // removes previous canvas if exists
-    if( document.getElementsByTagName ('canvas')[0] !=null ) {
-      document.removeChild ( document.getElementsByTagName ('canvas')[0] );
+    // Removes previous canvas if exists    
+    var exCanEl = document.getElementsByTagName("label");
+    for (var i = exCanEl.length - 1; i >= 0; i--) {
+        exCanEl[i].parentNode.removeChild(exCanEl[i]);
     }
+    
     
     // Getting the projector for picking objects
     this.projector = new THREE.Projector();
@@ -1058,7 +1060,7 @@ THREEGRAPHS.BarChart.prototype = {
 
     // Creating the ground-y
     var geometry = new THREE.PlaneGeometry( 
-                          THREEGRAPHS.Settings.sqStep*this.schema.rows.length, 
+                          THREEGRAPHS.Settings.sqStep*this.schema.rows.length,
                           THREEGRAPHS.Settings.valHeight );
 
     var groundY = new THREE.Mesh( geometry, materialYZ );

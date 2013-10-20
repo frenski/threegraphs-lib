@@ -216,6 +216,8 @@ describe("Bar charts", function () {
   });
   
   it( 'should init the controls', function () {
+    newBarChart = null;
+    newBarChart = new THREEGRAPHS.BarChart ( sData );
     newBarChart.init();
     expect( newBarChart.controls ).not.toEqual( null );
   });
