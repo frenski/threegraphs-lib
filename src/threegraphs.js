@@ -784,6 +784,11 @@ THREEGRAPHS.ScaleText = function( text, type, pos, color, yStep ) {
   
   // function to add the bar to the scene and position it
   this.addText = function( target ){
+    
+    var sqStep = THREEGRAPHS.Settings.squareStep;
+    var xDeviation = THREEGRAPHS.Settings.xDeviation;
+    var yDeviation = THREEGRAPHS.Settings.yDeviation;
+    var zDeviation = THREEGRAPHS.Settings.zDeviation;
         
       // Create a three.js text geometry
     var geometry = new THREE.TextGeometry( this.txt, {
@@ -802,25 +807,25 @@ THREEGRAPHS.ScaleText = function( text, type, pos, color, yStep ) {
     this.txtobj = new THREE.Mesh( geometry, material );
     
     if( this.ttype == "col" ) {
-      this.txtobj.position.x = -THREEGRAPHS.Settings.xDeviation + 
-                                THREEGRAPHS.Settings.sqStep/5;
-      this.txtobj.position.y = -THREEGRAPHS.Settings.zDeviation - 
-                                this.position * THREEGRAPHS.Settings.sqStep -
-                                THREEGRAPHS.Settings.sqStep/2;
+      this.txtobj.position.x = -xDeviation + 
+                                sqStep/5;
+      this.txtobj.position.y = -zDeviation - 
+                                this.position * sqStep -
+                                sqStep/2;
     } else if ( type == "row" ){
       this.txtobj.rotation.z = Math.PI/2;
-      this.txtobj.position.x = THREEGRAPHS.Settings.xDeviation + 
-                               this.position * THREEGRAPHS.Settings.sqStep +
-                               THREEGRAPHS.Settings.sqStep/2;
-      this.txtobj.position.y = THREEGRAPHS.Settings.zDeviation - 
-                               THREEGRAPHS.Settings.sqStep/5 - this.txt.length *
+      this.txtobj.position.x = xDeviation + 
+                               this.position * sqStep +
+                               sqStep/2;
+      this.txtobj.position.y = zDeviation - 
+                               sqStep/5 - this.txt.length *
                                ( this.textSize -  this.letterSize );
     } else {
       this.txtobj.rotation.y = Math.PI/2;
-      this.txtobj.position.x = -THREEGRAPHS.Settings.zDeviation;
-      this.txtobj.position.z = THREEGRAPHS.Settings.sqStep/5 + this.txt.length *
+      this.txtobj.position.x = -zDeviation;
+      this.txtobj.position.z = sqStep/5 + this.txt.length *
                                ( this.textSize -  this.letterSize );
-      this.txtobj.position.y = THREEGRAPHS.Settings.yDeviation + this.position * 
+      this.txtobj.position.y = yDeviation + this.position * 
                                yStep - this.textSize/2;
     }
     
