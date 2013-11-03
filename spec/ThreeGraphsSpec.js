@@ -264,5 +264,9 @@ describe("Bar charts", function () {
   it( 'should create pies with the same amount as the data itmes', function () {
     expect( newPieChart.pies.length ).toEqual(3);
   });
+  
+  it( 'should create lights', function () {
+    expect( newPieChart.scene.__lights[2].position.x).toEqual(600);
+  });
 
 });
