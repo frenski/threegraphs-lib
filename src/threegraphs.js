@@ -1254,7 +1254,6 @@ THREEGRAPHS.BarChart.prototype = {
 
       //*** Adding bars ************
       // ***************************
-      console.log (this.schema);
       for ( var i=0; i<this.schema.rows.length; i++ ) {
         for (var j=0; j<this.schema.cols.length; j++ ) {
           this.bars.push( new THREEGRAPHS.BarCube( 
@@ -1561,3 +1560,43 @@ THREEGRAPHS.PieChart.prototype = {
   
 }
 
+
+
+/**
+ * AREA CHART OBJECT
+ */
+
+THREEGRAPHS.AreaChart = function ( schema ) {
+  
+  this.schema = schema || 0;
+  this.dataValues = [];
+  for ( var i=0; i<schema.cols.length; i++ ){
+    this.dataValues[i] = [];
+    for( var j=0; j<schema.rows.length; j++ ){
+      this.dataValues[i][j] = schema.cols[i].values[j];
+    }
+  }
+  
+}
+
+THREEGRAPHS.AreaChart.prototype = {
+  
+  canvas: null,
+  domContainer: null,
+  constructor: THREEGRAPHS.BarChart,
+  controls: null,
+  scene: null,
+  camera: null,
+  camPos: { x: 500, y: 500, z: 1600 },
+  renderer: null,
+  projector: null,
+  intersectedId: null,
+  INTERSECTED: null,
+  niceScale: null,
+  areas: [],
+  intersobj: [],
+  sTextVals: [],
+  sTextRows: [],
+  sTextCols: []
+  
+}

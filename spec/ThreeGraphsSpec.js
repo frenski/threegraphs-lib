@@ -285,3 +285,24 @@ describe("Pie charts", function () {
   });
 
 });
+
+
+describe("Area charts", function () {
+  
+  var sData;
+  var newAreaChart;
+  var sData = { 
+          cols: [ { name:"col1", color:"CC0000", values: [5,6,9] }, 
+                 { name:"col2", color:"00CC00", values: [3,9,1] }
+               ],
+         rows: [ { name: "row 1" }, 
+                 { name: "row 2" }
+               ]
+    };
+    
+  it ( 'should instantiate the data variables', function () {
+    newAreaChart = new THREEGRAPHS.AreaChart ( sData );
+    expect( newAreaChart.dataValues[0][0] ).toEqual(5);
+  });  
+    
+});
