@@ -853,11 +853,18 @@ THREEGRAPHS.ScaleText = function( text, type, pos, color, yStep ) {
 };
 
 
-THREEGRAPHS.animate = function ( obj ){
+THREEGRAPHS.animate = function ( obj, type ){
   
   var animateSc = function (){
     
     requestAnimationFrame( animateSc );
+    
+    if ( type == 'bar'){
+      var mainElements = obj.bars;
+    } else if ( type == 'pie' ){
+      var mainElements = obj.pies
+    }
+    
     
     // Updateing the controls for the trackball camera
     obj.controls.update();
@@ -884,21 +891,21 @@ THREEGRAPHS.animate = function ( obj ){
         if ( obj.INTERSECTED ) {
           obj.INTERSECTED.material.emissive.setHex( 
             obj.INTERSECTED.currentHex );
-          obj.bars[obj.intersectedId].hideLabel();
+          mainElements[obj.intersectedId].hideLabel();
         }
         obj.INTERSECTED = intersects[ 0 ].object;
         obj.INTERSECTED.currentHex = obj.INTERSECTED.material.emissive.getHex();
         obj.INTERSECTED.material.emissive.setHex( 
-          parseInt( obj.bars[intersects[0].object.barid].darklumcolor, 16 ) );
-        obj.bars[intersects[0].object.barid].showLabel( actCoord.x, 
+          parseInt( mainElements[intersects[0].object.elemId].darklumcolor, 16 ) );
+        mainElements[intersects[0].object.elemId].showLabel( actCoord.x, 
                                                          actCoord.y );
-        obj.intersectedId = intersects[0].object.barid;
+        obj.intersectedId = intersects[0].object.elemId;
       }
     } else {
       if ( obj.INTERSECTED ) {
         obj.INTERSECTED.material.emissive.setHex( 
           obj.INTERSECTED.currentHex );
-        obj.bars[obj.intersectedId].hideLabel();
+        mainElements[obj.intersectedId].hideLabel();
       }
       obj.intersectedId = null;
       obj.INTERSECTED = null;
@@ -1127,7 +1134,7 @@ THREEGRAPHS.BarChart.prototype = {
         // Adds the bars objects to ones that need to be checked for intersection
         // This is used for the moseover action
         this.intersobj[this.bars.length-1] = this.bars[this.bars.length-1].barobj;
-        this.intersobj[this.bars.length-1].barid = this.bars.length-1;
+        this.intersobj[this.bars.length-1].elemId = this.bars.length-1;
       }
     }
     
@@ -1263,7 +1270,7 @@ THREEGRAPHS.BarChart.prototype = {
           // Adds the bars objects to ones that need to be checked for intersection
           // This is used for the moseover action
           this.intersobj[this.bars.length-1] = this.bars[this.bars.length-1].barobj;
-          this.intersobj[this.bars.length-1].barid = this.bars.length-1;
+          this.intersobj[this.bars.length-1].elemId = this.bars.length-1;
         }
       }
 
@@ -1317,7 +1324,7 @@ THREEGRAPHS.BarChart.prototype = {
     }
     
     this.controls = utils.mouseControls ( this.renderer, this.camera , 500, 3500 );
-    THREEGRAPHS.animate ( this );
+    THREEGRAPHS.animate ( this, 'bar' );
     
   }
   
@@ -1435,7 +1442,7 @@ THREEGRAPHS.PieChart.prototype = {
         // Adds the pies objects to ones that need to be checked for intersection
         // This is used for the moseover action
         this.intersobj[this.pies.length-1] = this.pies[this.pies.length-1].pieobj;
-        this.intersobj[this.pies.length-1].pieid = this.pies.length-1;
+        this.intersobj[this.pies.length-1].elemId = this.pies.length-1;
       }
     }
     
@@ -1483,7 +1490,7 @@ THREEGRAPHS.PieChart.prototype = {
     }
     
     this.controls = utils.mouseControls ( this.renderer, this.camera , 500, 3500 );
-    // THREEGRAPHS.animate ( this );
+    THREEGRAPHS.animate ( this, 'pie' );
     
   }
   
