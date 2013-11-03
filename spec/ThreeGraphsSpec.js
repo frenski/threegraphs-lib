@@ -268,5 +268,12 @@ describe("Bar charts", function () {
   it( 'should create lights', function () {
     expect( newPieChart.scene.__lights[2].position.x).toEqual(600);
   });
+  
+  it( 'should init the controls', function () {
+    newPieChart = null;
+    newPieChart = new THREEGRAPHS.PieChart ( sData );
+    newPieChart.init();
+    expect( newPieChart.controls ).not.toEqual( null );
+  });
 
 });

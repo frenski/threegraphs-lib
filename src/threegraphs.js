@@ -1460,6 +1460,31 @@ THREEGRAPHS.PieChart.prototype = {
     light.shadowBias = 0.0001;
     this.scene.add( light );
     
+  },
+  
+  init: function() { // General scene initialization
+    
+    var utils = new THREEGRAPHS.Utils( );
+    
+    // Detecting the renderer:
+    var browserRender = utils.detectRenderer ( );
+
+    // Init vars and scene depending on the renderer
+    if ( browserRender == 'webgl' ) {
+      this.initSceneVars ();
+      this.initWebGLScene ();
+    }
+    else if ( browserRender == 'canvas' ) {
+      this.initSceneVars ();
+      this.initCanvasScene ();
+    }
+    else {
+      utils.nonSupportedBrowsers();
+    }
+    
+    this.controls = utils.mouseControls ( this.renderer, this.camera , 500, 3500 );
+    // THREEGRAPHS.animate ( this );
+    
   }
   
 }
