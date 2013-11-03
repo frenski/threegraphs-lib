@@ -255,5 +255,10 @@ describe("Bar charts", function () {
     expect( newPieChart.camera.position.x ).toEqual(500);
     expect( THREEGRAPHS.Settings.zDeviation ).toEqual(-200);
   });
+  
+  it ( 'should instantiate the WebGL renderer', function () {
+    newPieChart.initWebGLScene();
+    expect( newPieChart.renderer.domElement ).toBeDefined();
+  });
 
 });

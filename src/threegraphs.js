@@ -1387,6 +1387,34 @@ THREEGRAPHS.PieChart.prototype = {
     this.camera.position.x = 500;
     this.camera.position.y = 700;
 
+  },
+  
+  initWebGLScene: function() { // Initiates a WEBGL Scene
+    
+    // Setting the renderer (with shadows)
+    if ( !this.canvas ) {
+      this.renderer = new THREE.WebGLRenderer( { antialias: true } );
+    }else{
+      this.renderer = new THREE.WebGLRenderer( { antialias: true, 
+                                                 canvas: this.canvas } );
+    }
+    this.renderer.setSize( window.innerWidth, window.innerHeight );
+    
+    // Switch off the shadows for safari due to the three.js bug with it
+    if ( navigator.userAgent.indexOf('Safari') == -1 ) {
+      this.renderer.shadowMapEnabled = true;
+      this.renderer.shadowMapSoft = true;
+    }
+    
+    if ( !this.domContainer ) {
+      this.domContainer = document.createElement( 'div' );
+      document.body.appendChild( this.domContainer );
+    } else {
+      this.domContainer = document.getElementById ( this.domContainer );
+    }
+    
+    this.domContainer.appendChild( this.renderer.domElement );
+    
   }
   
 }
