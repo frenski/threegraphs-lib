@@ -1597,6 +1597,236 @@ THREEGRAPHS.AreaChart.prototype = {
   intersobj: [],
   sTextVals: [],
   sTextRows: [],
-  sTextCols: []
+  sTextCols: [],
+  
+  initSceneVars : function () { // Initiates the main scene variable
+    
+    var utils =  new THREEGRAPHS.Utils();
+    
+    // Inits deviation position of the ground from the center
+    THREEGRAPHS.Settings.yDeviation = -(THREEGRAPHS.Settings.valHeight/2);
+    THREEGRAPHS.Settings.zDeviation = -(this.schema.cols.length*
+                                        THREEGRAPHS.Settings.squareStep/2);
+    THREEGRAPHS.Settings.xDeviation = -(this.schema.rows.length*
+                                        THREEGRAPHS.Settings.squareStep/2);
+    
+    // Inits the value scale variables
+    this.niceScale = new THREEGRAPHS.NiceScale ( 
+      utils.getMinArr ( this.dataValues ),
+      utils.getMaxArr ( this.dataValues ) 
+    );
+    this.niceScale.calculate ();
+    
+    // Removes previous canvas if exists    
+    var exCanEl = document.getElementsByTagName("canvas");
+    for (var i = exCanEl.length - 1; i >= 0; i--) {
+        exCanEl[i].parentNode.removeChild(exCanEl[i]);
+    }
+    
+    
+    // Getting the projector for picking objects
+    this.projector = new THREE.Projector();
+
+    // Creating new scene
+    this.scene = new THREE.Scene();
+
+    // Setting the camera
+    this.camera = new THREE.PerspectiveCamera( 60, 
+                                          window.innerWidth/window.innerHeight,
+                                          1, 
+                                          5000 );
+    this.camera.position.x = this.camPos.x;
+    this.camera.position.y = this.camPos.y;
+    this.camera.position.z = this.camPos.z;
+    
+  },
+  
+  initWebGLScene : function (){
+    
+    // Setting the renderer (with shadows)
+    if ( !this.canvas ) {
+      this.renderer = new THREE.WebGLRenderer( { antialias: true } );
+    }else{
+      this.renderer = new THREE.WebGLRenderer( { antialias: true, 
+                                                 canvas: this.canvas } );
+    }
+    this.renderer.setSize( window.innerWidth, window.innerHeight );
+
+    // Switch off the shadows for safari due to the three.js bug with it
+    if ( navigator.userAgent.indexOf('Safari') == -1 ) {
+      this.renderer.shadowMapEnabled = true;
+      this.renderer.shadowMapSoft = true;
+    }
+    
+    if ( !this.domContainer ) {
+      this.domContainer = document.createElement( 'div' );
+      document.body.appendChild( this.domContainer );
+    } else {
+      this.domContainer = document.getElementById ( this.domContainer );
+    }
+    
+    this.domContainer.appendChild( this.renderer.domElement );
+    
+    //*** Adding the grounds
+    // material for the grounds
+    var gridTex = THREE.ImageUtils.loadTexture(
+                   THREEGRAPHS.Settings.staticUrl+"/grid_pattern1.jpg");
+    gridTex.wrapS = gridTex.wrapT = THREE.RepeatWrapping;
+    gridTex.repeat.set( 5, 5 );
+
+    var gridTex2 = THREE.ImageUtils.loadTexture(
+                    THREEGRAPHS.Settings.staticUrl+"/grid_pattern2.jpg");
+    gridTex2.wrapS = gridTex2.wrapT = THREE.RepeatWrapping;
+    gridTex2.repeat.set( this.schema.rows.length, this.schema.cols.length );
+
+    var materialX = new THREE.MeshPhongMaterial({
+      ambient : 0x444444,
+      color : 0x777777,
+      shininess : 70, 
+      specular : 0x888888,
+      shading : THREE.SmoothShading,
+      side: THREE.DoubleSide,
+      map:gridTex2
+    });
+
+    var materialYZ = new THREE.MeshPhongMaterial({
+      ambient : 0x444444,
+      color : 0x999999,
+      shininess : 70, 
+      specular : 0x888888,
+      shading : THREE.SmoothShading,
+      side: THREE.DoubleSide,
+      map:gridTex
+    });
+    
+    var sqStep = THREEGRAPHS.Settings.squareStep;
+    var valH = THREEGRAPHS.Settings.valHeight
+
+    // Creating the ground-x
+    var geometry = new THREE.PlaneGeometry( sqStep*this.schema.rows.length,
+                                            sqStep*this.schema.cols.length );
+
+    var groundX = new THREE.Mesh( geometry, materialX );
+    groundX.rotation.x -= Math.PI/2;
+    groundX.castShadow = false;
+    groundX.receiveShadow = true;
+    groundX.position.y = THREEGRAPHS.Settings.yDeviation;
+    this.scene.add( groundX );
+
+    // Creating the ground-y
+    var geometry = new THREE.PlaneGeometry( 
+                           sqStep*this.schema.rows.length,
+                           valH);
+
+    var groundY = new THREE.Mesh( geometry, materialYZ );
+    groundY.castShadow = false;
+    groundY.receiveShadow = true;
+    groundY.position.z = THREEGRAPHS.Settings.zDeviation;
+    this.scene.add( groundY );
+
+    // craating the groynd-z
+    var geometry = new THREE.PlaneGeometry( 
+                          sqStep*this.schema.cols.length,
+                          valH );
+
+    var groundZ = new THREE.Mesh( geometry, materialYZ );
+    groundZ.rotation.y -= Math.PI/2;
+    groundZ.castShadow = false;
+    groundZ.receiveShadow = true;
+    groundZ.position.x = THREEGRAPHS.Settings.xDeviation;
+    this.scene.add( groundZ );
+    //////////////////
+    
+    //*** Adding texts for the scales
+    for( var i=0; i<this.schema.cols.length; i++ ) {
+      this.sTextCols[i] = new THREEGRAPHS.ScaleText( this.schema.cols[i].name,
+                                "col", i, this.schema.cols[i].color );
+      this.sTextCols[i].addText(groundX);
+    }
+
+    for( var i=0; i<this.schema.rows.length; i++ ) {
+      this.sTextRows[i] = new THREEGRAPHS.ScaleText( this.schema.rows[i].name,
+                                "row", i, THREEGRAPHS.Settings.scaleTextColor);
+      this.sTextRows[i].addText(groundX);
+    }
+
+    var yStep = THREEGRAPHS.Settings.valHeight/this.niceScale.tickNum;
+    for ( var i=0; i<= this.niceScale.tickNum; i++ ) {
+      var val = this.niceScale.niceMin + i*this.niceScale.tickSpacing;
+      var stringVal = val.toString();
+      this.sTextVals[i] = new THREEGRAPHS.ScaleText(stringVal, "val", i, 
+                                   this.scaleTextColor, yStep);
+      this.sTextVals[i].addText(groundZ);
+    }
+    
+    // Adding areas
+    for ( var i=0; i<this.schema.cols.length; i++ ) {
+      this.areas.push( new THREEGRAPHS.AreaPoly( 
+                        this.schema.cols[i].color, 
+                        i, 
+                        this.dataValues[i], 
+                        this.valTextColor, 
+                        THREEGRAPHS.Settings.extrudeOpts,
+                        'full', 
+                        document.getElementById( THREEGRAPHS.Settings.labelId),
+                        { row: this.schema.rows, 
+                          col: this.schema.cols[i].name },
+                          this.niceScale.niceMin, 
+                          this.niceScale.range, 
+                          this.valHeight ) );
+      this.areas[this.areas.length-1].addArea( this.scene );
+      // Adds the areas objects to ones that need to be checked for intersection
+      // This is used for the moseover action
+      this.intersobj[this.areas.length-1] = this.areas[this.areas.length-1].areaobj;
+      this.intersobj[this.areas.length-1].areaid = this.areas.length-1;
+    }
+    
+    // Adding the lights
+    var light = new THREE.DirectionalLight( 0x999999 );
+    light.position.set( 1, -1, 1 ).normalize();
+    this.scene.add( light );
+
+    var light = new THREE.DirectionalLight( 0x999999 );
+    light.position.set( -1, 1, -1 ).normalize();
+    this.scene.add( light );
+
+    light = new THREE.SpotLight( 0xd8d8d8, 2 );
+    light.position.set( 600, 3000, 1500 );
+    light.target.position.set( 0, 0, 0 );
+
+    light.shadowCameraNear = 1000;
+    light.shadowCameraFar = 5000;
+    light.shadowCameraFov = 40;
+    light.castShadow = true;
+    light.shadowDarkness = 0.3;
+    light.shadowBias = 0.0001;
+    this.scene.add( light );
+    
+  },
+  
+  init: function() { //scene initialization
+    
+    var utils = new THREEGRAPHS.Utils( );
+    
+    // Detecting the renderer:
+    var browserRender = utils.detectRenderer ( );
+
+    // Init vars and scene depending on the renderer
+    if ( browserRender == 'webgl' ) {
+      this.initSceneVars ();
+      this.initWebGLScene ();
+    }
+    else if ( browserRender == 'canvas' ) {
+      this.initSceneVars ();
+      this.initCanvasScene ();
+    }
+    else {
+      utils.nonSupportedBrowsers();
+    }
+    
+    this.controls = utils.mouseControls ( this.renderer, this.camera , 500, 3500 );
+    THREEGRAPHS.animate ( this, 'area' );
+    
+  }
   
 }

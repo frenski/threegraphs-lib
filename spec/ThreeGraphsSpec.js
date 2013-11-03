@@ -303,6 +303,43 @@ describe("Area charts", function () {
   it ( 'should instantiate the data variables', function () {
     newAreaChart = new THREEGRAPHS.AreaChart ( sData );
     expect( newAreaChart.dataValues[0][0] ).toEqual(5);
-  });  
+  });
+  
+  it ( ' should instantiate the scene variables ', function (){
+    newAreaChart.initSceneVars();
+    expect( newAreaChart.scene.visible ).toEqual(true);
+    expect( newAreaChart.camera.position.x ).toEqual(500);
+    expect( THREEGRAPHS.Settings.zDeviation ).toEqual(-200);
+  });
+  
+  it ( 'should instantiate the WebGL renderer', function () {
+    newAreaChart.initWebGLScene();
+    expect( newAreaChart.renderer.domElement ).toBeDefined();
+  });
+  
+  it ( 'should add 3 grounds', function () {
+    expect( newAreaChart.scene.children[0].geometry.vertices.length ).toEqual(4);
+    expect( newAreaChart.scene.children[1].geometry.vertices.length ).toEqual(4);
+    expect( newAreaChart.scene.children[2].geometry.vertices.length ).toEqual(4);
+  });
+  
+  it( 'should add text for the scales', function () {
+    expect( newAreaChart.sTextCols[0].txtobj.geometry ).toBeDefined();
+  });
+  
+  it( 'should create bars with the same amount as the data itmes', function () {
+    expect( newAreaChart.areas.length ).toEqual(2);
+  });
+  
+  it( 'should create lights', function () {
+    expect( newAreaChart.scene.__lights[2].position.x).toEqual(600);
+  });
+  
+  it( 'should init the controls', function () {
+    newAreaChart = null;
+    newAreaChart = new THREEGRAPHS.AreaChart ( sData );
+    newAreaChart.init();
+    expect( newAreaChart.controls ).not.toEqual( null );
+  });
     
 });
