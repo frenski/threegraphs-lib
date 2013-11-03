@@ -233,14 +233,14 @@ describe("Bar charts", function () {
 });
 
 
-describe("Bar charts", function () {
+describe("Pie charts", function () {
   
   var sData;
   var newPieChart;
   var sData = { 
           rows: [ { name:"row1", color:"CC0000", value: 5 }, 
-                 { name:"row2", color:"00CC00", value: 6 },
-                 { name:"row3", color:"0000CC", value: 8 }
+                 { name:"row2", color:"00CC00", value: 2 },
+                 { name:"row3", color:"0000CC", value: 12 }
                ]
     };
   

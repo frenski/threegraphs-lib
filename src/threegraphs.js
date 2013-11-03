@@ -575,11 +575,10 @@ THREEGRAPHS.PiePart = function( val, totalval, radius, angprev, pos, color, valc
 
    // function to show the label
    this.showLabel = function( posx, posy ){
-
+     
      // Shows HTML Label if set - uses jquery for DOM manipulation
      if ( this.hasHTMLLabel ) {
-       this.hasHTMLLabel.InnerHTML = this.titles.col + 
-                               '<p>'+val+'</p>';
+       this.hasHTMLLabel.innerHTML = this.titles.row +  ':<br>'+val;
        this.hasHTMLLabel.style.display = 'block';
        // Back transformation of the coordinates
        posx = ( ( posx + 1 ) * window.innerWidth / 2 );
@@ -721,7 +720,7 @@ THREEGRAPHS.AreaPoly = function( color, z, val, valcolor, render, html_label, ti
         for ( var i=0; i<this.titles.row.length; i++ ){
           rowVals += this.titles.row[i].name + ": " + this.val[i] + "<br>";
         }
-        this.hasHTMLLabel.InnerHTML = this.titles.col + 
+        this.hasHTMLLabel.innerHTML = this.titles.col + 
                                 '<p>' + rowVals + '</p>';
         this.hasHTMLLabel.style.display = 'block';
         // Back transformation of the coordinates
@@ -1369,7 +1368,8 @@ THREEGRAPHS.PieChart.prototype = {
     var utils =  new THREEGRAPHS.Utils();
     
     // Calclulating total value of all fields
-    this.totalVal = utils.getTotalArr ( this.dataValues ); 
+    this.totalVal = utils.getTotalArr ( [this.dataValues] );
+
     // Setting the current angle of rotation
     this.curAngle = 0;
 
@@ -1431,12 +1431,11 @@ THREEGRAPHS.PieChart.prototype = {
                                 THREEGRAPHS.Settings.pieRadius, 
                                 this.curAngle, 
                                 {x:0,y:0,z:0}, 
-                                THREEGRAPHS.Settings.extrudeOpts, 
                                 this.schema.rows[i].color, 
                                 THREEGRAPHS.Settings.valTextColor, 
                                 "full",
-                                 null,
-                                { col: this.schema.rows[i].name } 
+                                 document.getElementById( THREEGRAPHS.Settings.labelId ),
+                                { row: this.schema.rows[i].name } 
                               ) );
         this.curAngle = this.pies[this.pies.length-1].addPie(this.scene);
         // Adds the pies objects to ones that need to be checked for intersection
@@ -1450,15 +1449,15 @@ THREEGRAPHS.PieChart.prototype = {
     var light = new THREE.DirectionalLight( 0x777777 );
     light.position.set( 1, -1, 1 ).normalize();
     this.scene.add( light );
-
+    
     var light = new THREE.DirectionalLight( 0x777777 );
     light.position.set( -1, 1, -1 ).normalize();
     this.scene.add( light );
-
+    
     light = new THREE.SpotLight( 0xffffff, 1 );
     light.position.set( 600, 3000, 1500 );
     light.target.position.set( 0, 0, 0 );
-
+    
     light.shadowCameraNear = 1000;
     light.shadowCameraFar = 5000;
     light.shadowCameraFov = 40;
