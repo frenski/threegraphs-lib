@@ -231,3 +231,23 @@ describe("Bar charts", function () {
   });
   
 });
+
+
+describe("Bar charts", function () {
+  
+  var sData;
+  var newPieChart;
+  var sData = { 
+          cols: [ { name:"col1", color:"CC0000" }, 
+                 { name:"col2", color:"00CC00" },
+                 { name:"col3", color:"0000CC" }
+               ],
+         rows: [ { name: "row 1", values: [5,6,8] } ]
+    };
+  
+  it ( 'should instantiate the data variables', function () {
+    newPieChart = new THREEGRAPHS.PieChart ( sData );
+    expect( newBarChart.dataValues[0][0] ).toEqual(5);
+  });
+
+});
