@@ -238,15 +238,22 @@ describe("Bar charts", function () {
   var sData;
   var newPieChart;
   var sData = { 
-          cols: [ { name:"col1", color:"CC0000", value: 5 }, 
-                 { name:"col2", color:"00CC00", value: 6 },
-                 { name:"col3", color:"0000CC", value: 8 }
+          rows: [ { name:"row1", color:"CC0000", value: 5 }, 
+                 { name:"row2", color:"00CC00", value: 6 },
+                 { name:"row3", color:"0000CC", value: 8 }
                ]
     };
   
   it ( 'should instantiate the data variables', function () {
     newPieChart = new THREEGRAPHS.PieChart ( sData );
-    expect( newBarChart.dataValues[0][0] ).toEqual(5);
+    expect( newPieChart.dataValues[0] ).toEqual(5);
+  });
+  
+  it ( ' should instantiate the scene variables ', function (){
+    newPieChart.initSceneVars();
+    expect( newPieChart.scene.visible ).toEqual(true);
+    expect( newPieChart.camera.position.x ).toEqual(500);
+    expect( THREEGRAPHS.Settings.zDeviation ).toEqual(-200);
   });
 
 });

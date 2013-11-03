@@ -969,7 +969,7 @@ THREEGRAPHS.BarChart.prototype = {
     this.niceScale.calculate ();
     
     // Removes previous canvas if exists    
-    var exCanEl = document.getElementsByTagName("label");
+    var exCanEl = document.getElementsByTagName("canvas");
     for (var i = exCanEl.length - 1; i >= 0; i--) {
         exCanEl[i].parentNode.removeChild(exCanEl[i]);
     }
@@ -1334,7 +1334,7 @@ THREEGRAPHS.PieChart = function ( schema ) {
   this.schema = schema || 0;
   this.dataValues = [];
   for ( var i=0; i<schema.rows.length; i++ ){
-    this.dataValues[i] = schema.rows[i].values;
+    this.dataValues[i] = schema.rows[i].value;
   }
 
 };
@@ -1353,7 +1353,41 @@ THREEGRAPHS.PieChart.prototype = {
   intersectedId: null,
   INTERSECTED: null,
   pies: [],
-  intersobj: []
+  intersobj: [],
+  totalVal: 0,
+  curAngle: 0,
+  
+  initSceneVars : function (){ // Initiates the main vars
+
+    var utils =  new THREEGRAPHS.Utils();
+    
+    // Calclulating total value of all fields
+    this.totalVal = utils.getTotalArr ( this.dataValues ); 
+    // Setting the current angle of rotation
+    this.curAngle = 0;
+
+    // Removes previous canvas if exists    
+    var exCanEl = document.getElementsByTagName("canvas");
+    for (var i = exCanEl.length - 1; i >= 0; i--) {
+        exCanEl[i].parentNode.removeChild(exCanEl[i]);
+    }
+
+    // Getting the projector for picking objects
+    this.projector = new THREE.Projector();
+
+    // Creating new scene
+    this.scene = new THREE.Scene();
+
+    // Setting the camera
+    this.camera = new THREE.PerspectiveCamera( 70, 
+                                          window.innerWidth/window.innerHeight,
+                                          1, 
+                                          5000 );
+    this.camera.position.z = 1200;
+    this.camera.position.x = 500;
+    this.camera.position.y = 700;
+
+  }
   
 }
 
