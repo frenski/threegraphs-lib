@@ -275,5 +275,13 @@ describe("Pie charts", function () {
     newPieChart.init();
     expect( newPieChart.controls ).not.toEqual( null );
   });
+  
+  it ( 'should instantiate the Canvas renderer', function () {
+    newPieChart = null;
+    newPieChart = new THREEGRAPHS.PieChart ( sData );
+    newPieChart.initSceneVars();
+    newPieChart.initCanvasScene();
+    expect( newPieChart.renderer.domElement ).toBeDefined();
+  });
 
 });

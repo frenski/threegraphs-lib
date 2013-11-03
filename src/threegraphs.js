@@ -445,7 +445,8 @@ THREEGRAPHS.BarCube = function( color, x, z, val, valcolor, render, html_label, 
    this.showLabel = function( posx, posy){
 
      if ( this.hasHTMLLabel ) {
-       this.hasHTMLLabel.innerHTML = val;
+       this.hasHTMLLabel.innerHTML = '<b>' + this.titles.col + '</b>'+
+                                     '<br>' + this.titles.row + ': '+val;
        this.hasHTMLLabel.style.display = 'block';
        // Back transformation of the coordinates
        posx = ( ( posx + 1 ) * window.innerWidth / 2 );
@@ -1253,14 +1254,15 @@ THREEGRAPHS.BarChart.prototype = {
 
       //*** Adding bars ************
       // ***************************
-      for ( var i=0; i<this.schema.cols.length; i++ ) {
-        for (var j=0; j<this.schema.rows.length; j++ ) {
+      console.log (this.schema);
+      for ( var i=0; i<this.schema.rows.length; i++ ) {
+        for (var j=0; j<this.schema.cols.length; j++ ) {
           this.bars.push( new THREEGRAPHS.BarCube( 
-                this.schema.cols[i].color, j, i, this.dataValues[i][j],
+                this.schema.cols[j].color, i, j, this.dataValues[i][j],
                 THREEGRAPHS.Settings.valTextColor, 'light',
                 document.getElementById( THREEGRAPHS.Settings.labelId),
-                { row:this.schema.rows[j].name, 
-                  col:this.schema.cols[i].name },
+                { row:this.schema.rows[i].name, 
+                  col:this.schema.cols[j].name },
                   this.niceScale.niceMin, 
                   this.niceScale.range, 
                   this.valHeight ) );
@@ -1465,6 +1467,70 @@ THREEGRAPHS.PieChart.prototype = {
     light.shadowDarkness = 0.3;
     light.shadowBias = 0.0001;
     this.scene.add( light );
+    
+  },
+  
+  initCanvasScene: function (){
+    
+    // Setting the Canvas renderer
+    if ( !this.canvas ) {
+      this.renderer = new THREE.CanvasRenderer(  );
+    }else{
+      this.renderer = new THREE.CanvasRenderer( { canvas: this.canvas } );
+    }
+    
+    this.renderer.setSize( window.innerWidth, window.innerHeight );
+
+    if ( !this.domContainer ) {
+      this.domContainer = document.createElement( 'div' );
+      document.body.appendChild( this.domContainer );
+    } else {
+      this.domContainer = document.getElementById ( this.domContainer );
+    }
+
+    this.domContainer.appendChild( this.renderer.domElement );
+    
+    // Adding pies
+    for ( var i=0; i<this.schema.rows.length; i++ ) {
+      if( this.dataValues[i] > 0 ){
+        this.pies.push( new THREEGRAPHS.PiePart( 
+                                this.dataValues[i], 
+                                this.totalVal, 
+                                THREEGRAPHS.Settings.pieRadius, 
+                                this.curAngle, 
+                                {x:0,y:0,z:0}, 
+                                this.schema.rows[i].color, 
+                                THREEGRAPHS.Settings.valTextColor, 
+                                "light",
+                                 document.getElementById( THREEGRAPHS.Settings.labelId ),
+                                { row: this.schema.rows[i].name } 
+                              ) );
+        this.curAngle = this.pies[this.pies.length-1].addPie(this.scene);
+        // Adds the pies objects to ones that need to be checked for intersection
+        // This is used for the moseover action
+        this.intersobj[this.pies.length-1] = this.pies[this.pies.length-1].pieobj;
+        this.intersobj[this.pies.length-1].elemId = this.pies.length-1;
+      }
+    }
+    
+    
+    // Adding the lights
+    var ambientLight = new THREE.AmbientLight( 0x777777 );
+    this.scene.add( ambientLight );
+
+    var directionalLight = new THREE.DirectionalLight( 0x777777 );
+    directionalLight.position.x = 0.4;
+    directionalLight.position.y = 0.4;
+    directionalLight.position.z = - 0.2;
+    directionalLight.position.normalize();
+    this.scene.add( directionalLight );
+
+    var directionalLight = new THREE.DirectionalLight( 0x777777 );
+    directionalLight.position.x = - 0.2;
+    directionalLight.position.y = 0.5;
+    directionalLight.position.z = - 0.1;
+    directionalLight.position.normalize();
+    this.scene.add( directionalLight );
     
   },
   
