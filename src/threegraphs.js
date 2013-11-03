@@ -922,7 +922,10 @@ THREEGRAPHS.BarChart = function ( schema ) {
   this.schema = schema || 0;
   this.dataValues = [];
   for ( var i=0; i<schema.rows.length; i++ ){
-    this.dataValues[i] = schema.rows[i].values;
+    this.dataValues[i] = [];
+    for( var j=0; j<schema.cols.length; j++ ){
+      this.dataValues[i][j] = schema.rows[i].values[j];
+    }
   }
   
 };
@@ -1109,15 +1112,15 @@ THREEGRAPHS.BarChart.prototype = {
     }
     
     //*** Adding bars
-    for ( var i=0; i<this.schema.cols.length; i++ ) {
-      for (var j=0; j<this.schema.rows.length; j++ ) {
+    for ( var i=0; i<this.schema.rows.length; i++ ) {
+      for (var j=0; j<this.schema.cols.length; j++ ) {
         this.bars.push( 
           new THREEGRAPHS.BarCube( 
-                this.schema.cols[i].color, j, i, this.dataValues[i][j],
+                this.schema.cols[j].color, i, j, this.dataValues[i][j],
                 THREEGRAPHS.Settings.valTextColor, 'full',
                 document.getElementById( THREEGRAPHS.Settings.labelId),
-                { row:this.schema.rows[j].name, 
-                  col:this.schema.cols[i].name },
+                { row:this.schema.rows[i].name, 
+                  col:this.schema.cols[j].name },
                   this.niceScale.niceMin, 
                   this.niceScale.range, 
                   this.valHeight ) );
@@ -1320,4 +1323,38 @@ THREEGRAPHS.BarChart.prototype = {
   }
   
 };
+
+
+
+/**
+ * BAR CHART OBJECT
+ */
+ 
+THREEGRAPHS.PieChart = function ( schema ) {
+
+  this.schema = schema || 0;
+  this.dataValues = [];
+  for ( var i=0; i<schema.rows.length; i++ ){
+    this.dataValues[i] = schema.rows[i].values;
+  }
+
+};
+
+THREEGRAPHS.PieChart.prototype = {
+  
+  canvas: null,
+  domContainer: null,
+  constructor: THREEGRAPHS.PieChart,
+  controls: null,
+  scene: null,
+  camera: null,
+  camPos: { x: 500, y: 500, z: 1600 },
+  renderer: null,
+  projector: null,
+  intersectedId: null,
+  INTERSECTED: null,
+  pies: [],
+  intersobj: []
+  
+}
 

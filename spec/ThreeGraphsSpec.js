@@ -238,11 +238,10 @@ describe("Bar charts", function () {
   var sData;
   var newPieChart;
   var sData = { 
-          cols: [ { name:"col1", color:"CC0000" }, 
-                 { name:"col2", color:"00CC00" },
-                 { name:"col3", color:"0000CC" }
-               ],
-         rows: [ { name: "row 1", values: [5,6,8] } ]
+          cols: [ { name:"col1", color:"CC0000", value: 5 }, 
+                 { name:"col2", color:"00CC00", value: 6 },
+                 { name:"col3", color:"0000CC", value: 8 }
+               ]
     };
   
   it ( 'should instantiate the data variables', function () {
