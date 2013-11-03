@@ -260,5 +260,9 @@ describe("Bar charts", function () {
     newPieChart.initWebGLScene();
     expect( newPieChart.renderer.domElement ).toBeDefined();
   });
+  
+  it( 'should create pies with the same amount as the data itmes', function () {
+    expect( newPieChart.pies.length ).toEqual(3);
+  });
 
 });

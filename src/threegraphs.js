@@ -1415,6 +1415,30 @@ THREEGRAPHS.PieChart.prototype = {
     
     this.domContainer.appendChild( this.renderer.domElement );
     
+    // Adding pies
+    for ( var i=0; i<this.schema.rows.length; i++ ) {
+      if( this.dataValues[i] > 0 ){
+        this.pies.push( new THREEGRAPHS.PiePart( 
+                                this.dataValues[i], 
+                                this.totalVal, 
+                                THREEGRAPHS.Settings.pieRadius, 
+                                this.curAngle, 
+                                {x:0,y:0,z:0}, 
+                                THREEGRAPHS.Settings.extrudeOpts, 
+                                this.schema.rows[i].color, 
+                                THREEGRAPHS.Settings.valTextColor, 
+                                "full",
+                                 null,
+                                { col: this.schema.rows[i].name } 
+                              ) );
+        this.curAngle = this.pies[this.pies.length-1].addPie(this.scene);
+        // Adds the pies objects to ones that need to be checked for intersection
+        // This is used for the moseover action
+        this.intersobj[this.pies.length-1] = this.pies[this.pies.length-1].pieobj;
+        this.intersobj[this.pies.length-1].pieid = this.pies.length-1;
+      }
+    }
+    
   }
   
 }
