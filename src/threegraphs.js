@@ -445,8 +445,7 @@ THREEGRAPHS.BarCube = function( color, x, z, val, valcolor, render, html_label, 
    this.showLabel = function( posx, posy){
 
      if ( this.hasHTMLLabel ) {
-       this.hasHTMLLabel.innerHTML = this.titles.row + 
-                               '<p>' + this.titles.col + ': '+val+'</p>';
+       this.hasHTMLLabel.innerHTML = val;
        this.hasHTMLLabel.style.display = 'block';
        // Back transformation of the coordinates
        posx = ( ( posx + 1 ) * window.innerWidth / 2 );
