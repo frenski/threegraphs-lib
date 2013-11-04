@@ -666,18 +666,17 @@ THREEGRAPHS.AreaPoly = function( color, z, val, valcolor, render, html_label, ti
 
       // Shape geometry
       var shape = new THREE.Shape();
-      shape.moveTo( startX, startY );
+      shape.moveTo( startX, startY+1 );
 
       for (var i = 0; i < this.val.length; i++) {
         shape.lineTo( startX + i*sqStep, startY + calcPointYPos( this.val[i], 
                                        this.minScaleVal,
                                        this.scaleDif,
                                        this.valHeight) );
-        console.log( startX + i*sqStep, startY + calcPointYPos( this.val[i], this.minScaleVal, this.scaleDif, this.valHeight)  );
       }
       shape.lineTo( startX + ( this.val.length - 1)*sqStep , startY-1);
       // the -1 is a workaround before I fix the issue with the nice scales
-      shape.lineTo( startX, startY );
+      shape.lineTo( startX, startY+1 );
 
       var geometry = new THREE.ExtrudeGeometry( shape, this.extrudeOpts );
 
@@ -1805,6 +1804,137 @@ THREEGRAPHS.AreaChart.prototype = {
     light.shadowBias = 0.0001;
     this.scene.add( light );
     
+  },
+  
+  initCanvasScene: function () {
+    
+    // Setting the Canvas renderer
+    if ( !this.canvas ) {
+      this.renderer = new THREE.CanvasRenderer(  );
+    }else{
+      this.renderer = new THREE.CanvasRenderer( { canvas: this.canvas } );
+    }
+    
+    this.renderer.setSize( window.innerWidth, window.innerHeight );
+
+    if ( !this.domContainer ) {
+      this.domContainer = document.createElement( 'div' );
+      document.body.appendChild( this.domContainer );
+    } else {
+      this.domContainer = document.getElementById ( this.domContainer );
+    }
+
+    this.domContainer.appendChild( this.renderer.domElement );
+    
+
+    // Adding the grounds
+    
+    var sqStep = THREEGRAPHS.Settings.squareStep;
+    var valH = THREEGRAPHS.Settings.valHeight
+
+    var groundSizeX = sqStep*this.schema.rows.length;
+    var groundSizeY = sqStep*this.schema.cols.length;
+    var lineMaterial = new THREE.LineBasicMaterial( { color: 0xaaaaaa, 
+                                                      opacity: 0.8 } );
+
+    // Adding the X ground
+
+    var geometry = new THREE.Geometry();
+    // putting the Y vertices
+    for ( var i = 0; i <= groundSizeY; i += sqStep ) {
+      geometry.vertices.push( new THREE.Vector3(  0, 0, i ) );
+      geometry.vertices.push( new THREE.Vector3(  groundSizeX, 0, i ) );
+    }
+    // putting the X vertices
+    for ( var i = 0; i <= groundSizeX; i += sqStep ) {
+      geometry.vertices.push( new THREE.Vector3( i, 0, 0 ) );
+      geometry.vertices.push( new THREE.Vector3( i, 0, groundSizeY ) );
+    }
+
+    // Creating the line object and positioning it
+    var groundX = new THREE.Line( geometry, lineMaterial );
+    groundX.type = THREE.LinePieces;
+    groundX.position.y = THREEGRAPHS.Settings.yDeviation;
+    groundX.position.z = THREEGRAPHS.Settings.zDeviation;
+    groundX.position.x = THREEGRAPHS.Settings.xDeviation;
+    this.scene.add( groundX );
+
+    // Adding the Y ground
+
+    var geometry = new THREE.Geometry();
+    // putting the X vertices
+    for ( var i = 0; i <= valH; i += sqStep ) {
+      geometry.vertices.push( new THREE.Vector3(  0, 0, i ) );
+      geometry.vertices.push( new THREE.Vector3(  groundSizeX, 0, i ) );
+    }
+
+    // Creating the line object and positioning it
+    var groundY = new THREE.Line( geometry, lineMaterial );
+    groundY.rotation.set( Math.PI/2, 0, 0 );
+    groundY.type = THREE.LinePieces;
+    groundY.position.y = -THREEGRAPHS.Settings.yDeviation;
+    groundY.position.z = THREEGRAPHS.Settings.zDeviation;
+    groundY.position.x = THREEGRAPHS.Settings.xDeviation;
+    this.scene.add( groundY );
+
+    // Adding the Y ground
+
+    var geometry = new THREE.Geometry();
+    // putting the X vertices
+    for ( var i = 0; i <= valH; i += sqStep ) {
+      geometry.vertices.push( new THREE.Vector3(  0, 0, i ) );
+      geometry.vertices.push( new THREE.Vector3(  groundSizeY, 0, i ) );
+    }
+
+    // Creating the line object and positioning it
+    var groundZ = new THREE.Line( geometry, lineMaterial );
+    groundZ.rotation.set( Math.PI/2, 0, Math.PI/2 );
+    groundZ.type = THREE.LinePieces;
+    groundZ.position.y = -THREEGRAPHS.Settings.yDeviation;
+    groundZ.position.z = THREEGRAPHS.Settings.zDeviation;
+    groundZ.position.x = THREEGRAPHS.Settings.xDeviation;
+    this.scene.add( groundZ );
+
+
+    // Adding areas
+    for ( var i=0; i<this.schema.cols.length; i++ ) {
+      this.areas.push( new THREEGRAPHS.AreaPoly( 
+                        this.schema.cols[i].color, 
+                        i, 
+                        this.dataValues[i], 
+                        this.valTextColor,
+                        'light', 
+                        document.getElementById( THREEGRAPHS.Settings.labelId),
+                        { row: this.schema.rows, 
+                          col: this.schema.cols[i].name },
+                          this.niceScale.niceMin, 
+                          this.niceScale.range, 
+                          THREEGRAPHS.Settings.valHeight ) );
+      this.areas[this.areas.length-1].addArea( this.scene );
+      // Adds the areas objects to ones that need to be checked for intersection
+      // This is used for the moseover action
+      this.intersobj[this.areas.length-1] = this.areas[this.areas.length-1].areaobj;
+      this.intersobj[this.areas.length-1].elemId = this.areas.length-1;
+    }
+
+    // Adding the lights
+    var ambientLight = new THREE.AmbientLight( 0xffffff );
+    this.scene.add( ambientLight );
+
+    var directionalLight = new THREE.DirectionalLight( Math.random() * 0xffffff );
+    directionalLight.position.x = 0.4;
+    directionalLight.position.y = 0.4;
+    directionalLight.position.z = - 0.2;
+    directionalLight.position.normalize();
+    this.scene.add( directionalLight );
+
+    var directionalLight = new THREE.DirectionalLight( Math.random() * 0xffffff );
+    directionalLight.position.x = - 0.2;
+    directionalLight.position.y = 0.5;
+    directionalLight.position.z = - 0.1;
+    directionalLight.position.normalize();
+    this.scene.add( directionalLight );
+
   },
   
   init: function() { //scene initialization

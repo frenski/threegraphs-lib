@@ -293,7 +293,7 @@ describe("Area charts", function () {
   var newAreaChart;
   var sData = { 
           cols: [ { name:"col1", color:"CC0000", values: [5,6,9] }, 
-                 { name:"col2", color:"00CC00", values: [3,9,1] }
+                 { name:"col2", color:"00CC00", values: [5,9,1] }
                ],
          rows: [ { name: "row 1" }, 
                  { name: "row 2" }
@@ -340,6 +340,14 @@ describe("Area charts", function () {
     newAreaChart = new THREEGRAPHS.AreaChart ( sData );
     newAreaChart.init();
     expect( newAreaChart.controls ).not.toEqual( null );
+  });
+  
+  it ( 'should instantiate the Canvas renderer', function () {
+    newAreaChart = null;
+    newAreaChart = new THREEGRAPHS.AreaChart ( sData );
+    newAreaChart.initSceneVars();
+    newAreaChart.initCanvasScene();
+    expect( newAreaChart.renderer.domElement ).toBeDefined();
   });
     
 });
