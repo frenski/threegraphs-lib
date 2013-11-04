@@ -673,8 +673,10 @@ THREEGRAPHS.AreaPoly = function( color, z, val, valcolor, render, html_label, ti
                                        this.minScaleVal,
                                        this.scaleDif,
                                        this.valHeight) );
+        console.log( startX + i*sqStep, startY + calcPointYPos( this.val[i], this.minScaleVal, this.scaleDif, this.valHeight)  );
       }
-      shape.lineTo( startX + ( this.val.length - 1)*sqStep , startY);
+      shape.lineTo( startX + ( this.val.length - 1)*sqStep , startY-1);
+      // the -1 is a workaround before I fix the issue with the nice scales
       shape.lineTo( startX, startY );
 
       var geometry = new THREE.ExtrudeGeometry( shape, this.extrudeOpts );
@@ -707,7 +709,7 @@ THREEGRAPHS.AreaPoly = function( color, z, val, valcolor, render, html_label, ti
         this.areaobj.receiveShadow = true;
       }
       this.areaobj.position.z = THREEGRAPHS.Settings.zDeviation + this.posz*sqStep
-                                + sqStep/4 +this.extrudeOpts.amount/2;
+                                + sqStep/8;
       target.add( this.areaobj );
       
     };
@@ -862,7 +864,9 @@ THREEGRAPHS.animate = function ( obj, type ){
     if ( type == 'bar'){
       var mainElements = obj.bars;
     } else if ( type == 'pie' ){
-      var mainElements = obj.pies
+      var mainElements = obj.pies;
+    } else if ( type == 'area' ){
+      var mainElements = obj.areas;
     }
     
     
@@ -1765,20 +1769,19 @@ THREEGRAPHS.AreaChart.prototype = {
                         this.schema.cols[i].color, 
                         i, 
                         this.dataValues[i], 
-                        this.valTextColor, 
-                        THREEGRAPHS.Settings.extrudeOpts,
+                        this.valTextColor,
                         'full', 
                         document.getElementById( THREEGRAPHS.Settings.labelId),
                         { row: this.schema.rows, 
                           col: this.schema.cols[i].name },
                           this.niceScale.niceMin, 
                           this.niceScale.range, 
-                          this.valHeight ) );
+                          THREEGRAPHS.Settings.valHeight ) );
       this.areas[this.areas.length-1].addArea( this.scene );
       // Adds the areas objects to ones that need to be checked for intersection
       // This is used for the moseover action
       this.intersobj[this.areas.length-1] = this.areas[this.areas.length-1].areaobj;
-      this.intersobj[this.areas.length-1].areaid = this.areas.length-1;
+      this.intersobj[this.areas.length-1].elemId = this.areas.length-1;
     }
     
     // Adding the lights
