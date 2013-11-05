@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>worldchart</title>
+	<meta name="generator" content="TextMate http://macromates.com/">
+	<meta name="author" content="Yane Frenski">
+	
+	<style>
+	  #threegraphs-valuelable{
+      color: #fff;
+      text-shadow: 1px 1px 2px #000;
+      position: absolute;
+      top: 200px;
+      left: 500px;
+      z-index: 9;
+      font-size: 16px;
+      display: none;
+      padding: 10px;
+      background: #26272b;
+      border: 1px solid #fff;
+    }
+  </style>
+	
+	<script type="text/javascript" src="../lib/three.min.js"></script>
+  <script type="text/javascript" src="../lib/TrackballControls.js"></script>
+  <script type="text/javascript" src="../lib/TrackballControlsTouch.js"></script>
+  <script type="text/javascript" src="../src/ThreeGraphs.js"></script>
+  <script type="text/javascript" src="../fonts/helvetiker_bold.typeface.js"></script>
+  <script type="text/javascript">
+  
+    window.onload = function(){
+      
+      THREEGRAPHS.Settings.staticUrl = '../img';
+      
+      var sampleData = 
+                  { cols: [
+                    { name:"Austria", color:"E28105", value: 32400 }, 
+                    { name:"Belgium", color:"E28105", value: 29900 }, 
+                    { name:"Bulgaria", color:"E28105", value: 11600 }
+                  ],
+                  rows:[{name:"Value info"}]
+                };
+    
+      var newWorldChart = new THREEGRAPHS.WorldChart ( sampleData );
+      newWorldChart.init();
+      
+    }
+    
+  </script>
+</head>
+<body style="margin:0; padding:0; background-color:#000;">
+  <div id="threegraphs-valuelable">
+    sss
+  </div>
+</body>
+</html>

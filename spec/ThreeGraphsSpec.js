@@ -103,7 +103,7 @@ describe("Bar Cube", function() {
   
   var scene = new THREE.Scene();
   var label = document.createElement('div');
-  var nCube = new THREEGRAPHS.BarCube( "CC0000", 0, 0, 7, "ffffff", 'full', false, { row:"row", col:"col" }, 0, 10, 10 );
+  var nCube = new THREEGRAPHS.BarCube( "CC0000", 0, 0, 7, "ffffff", 'full', false, { row:"row", col:"col" }, 0, 10, 10, 100 );
   nCube.addBar ( scene );
   
   it ( 'should create a new bar object', function () {
@@ -350,4 +350,61 @@ describe("Area charts", function () {
     expect( newAreaChart.renderer.domElement ).toBeDefined();
   });
     
+});
+
+describe("World charts", function () {
+
+  var sData;
+  var newWorldChart;
+  sData = { cols: [
+                     { name:"Austria", color:"E28105", value: 32400 }, 
+                     { name:"Belgium", color:"E28105", value: 29900 }, 
+                     { name:"Bulgaria", color:"E28105", value: 11600 }
+                    ],
+                    rows:[{name:"Value info"}]
+                  }
+
+  it ( 'should instantiate the data variables', function () {
+    newWorldChart = new THREEGRAPHS.WorldChart ( sData );
+    expect( newWorldChart.dataValues[1] ).toEqual(29900);
+  });
+  
+  it ( ' should instantiate the scene variables ', function (){
+    newWorldChart.initSceneVars();
+    expect( newWorldChart.scene.visible ).toEqual(true);
+    expect( newWorldChart.camera.position.x ).toEqual(100);
+  });
+  
+  it ( 'should instantiate the WebGL renderer', function () {
+    newWorldChart.initWebGLScene();
+    expect( newWorldChart.renderer.domElement ).toBeDefined();
+  });
+  
+  it( 'should create globe', function () {
+    expect( newWorldChart.globe.geometry.radius ).toEqual(750);
+  });
+  
+  it( 'should create bars with the same amount as the data itmes', function () {
+    expect( newWorldChart.bars.length ).toEqual(3);
+  });
+  
+  it( 'should create lights', function () {
+    expect( Math.ceil(newWorldChart.scene.__lights[2].position.x) ).toEqual(1);
+  });
+  
+  it( 'should init the controls', function () {
+    newWorldChart = null;
+    newWorldChart = new THREEGRAPHS.WorldChart ( sData );
+    newWorldChart.init();
+    expect( newWorldChart.controls ).not.toEqual( null );
+  });
+  
+  it ( 'should instantiate the Canvas renderer', function () {
+    newWorldChart = null;
+    newWorldChart = new THREEGRAPHS.WorldChart ( sData );
+    newWorldChart.initSceneVars();
+    newWorldChart.initCanvasScene();
+    expect( newWorldChart.renderer.domElement ).toBeDefined();
+  });
+
 });
