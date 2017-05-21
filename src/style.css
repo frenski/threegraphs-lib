@@ -1,0 +1,54 @@
+#wrapper {
+    margin: 0 auto;
+    position: absolute;
+    width:  100px;
+    background: #EFF5FB;
+    padding: 2px;
+}
+
+#fileDisplayArea {
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+
+div.left {
+     font-size: 18px;
+    margin: 2px 0 2px 0;
+    padding: 2px;
+}
+
+#wrapper {
+    margin: 0 auto;
+    position: absolute;
+    width:  100px;
+    background: #EFF5FB;
+    padding: 2px;
+}
+
+#fileDisplayArea {
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+
+
+div.left{
+     font-size: 18px;
+    margin: 2px 0 2px 0;
+    padding: 2px;
+}
+
+
+div.leftadvanced {
+     font-size: 12px;
+    margin: 2px 0 2px 0;
+    padding: 2px;
+}
+
